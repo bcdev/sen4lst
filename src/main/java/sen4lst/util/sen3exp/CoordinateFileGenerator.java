@@ -94,7 +94,7 @@ class CoordinateFileGenerator {
     }
 
     private void generateNcFile(String ncgen, File cdlFile, File ncFile) throws Exception {
-        final String command = ncgen + " -k 3 -o " + ncFile.getPath() + " " + cdlFile.getPath();
+        final String command = ncgen + " -k 1 -o " + ncFile.getPath() + " " + cdlFile.getPath();
         System.out.println(command);
         final Process process = Runtime.getRuntime().exec(command);
         if (process.waitFor() != 0) {
