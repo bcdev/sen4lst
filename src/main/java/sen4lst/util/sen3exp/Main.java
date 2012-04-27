@@ -14,7 +14,11 @@ package sen4lst.util.sen3exp;/*
  * with this program; if not, see http://www.gnu.org/licenses/
  */
 
+import org.esa.beam.framework.dataio.ProductIO;
+import org.esa.beam.framework.datamodel.Product;
+
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -113,11 +117,31 @@ public class Main {
             fileGenerator.setGeneratorExecutablePath("/usr/local/bin/ncgen");
             fileGenerator.setSourceCdlFilePath(createSourceCdlFilePath(cdlResourceName));
             fileGenerator.setTargetCdlFilePath(createTempFile("geo", ".cdl").getPath());
-            fileGenerator.setTargetNcFilePath(createTargetNcFilePath(productName, cdlResourceName));
+            final String targetNcFilePath = createTargetNcFilePath(productName, cdlResourceName);
+            fileGenerator.setTargetNcFilePath(targetNcFilePath);
             fileGenerator.getProperties().setProperty("LAT", g.getLatFilePath());
             fileGenerator.getProperties().setProperty("LON", g.getLonFilePath());
             fileGenerator.getProperties().setProperty("PRODUCT_NAME", productName);
             fileGenerator.generateDataset();
+
+            final File[] files = new File(targetNcFilePath).getParentFile().listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".nc") && !name.endsWith("beam.nc") && !name.startsWith("x");
+                }
+            });
+            for (final File file : files) {
+                try {
+                    final Product product = ProductIO.readProduct(file, "NetCDF-CF");
+                    if (product != null) {
+                        ProductIO.writeProduct(product, file.getPath().replace(".nc", ".beam.nc"), "NetCDF-CF");
+                        System.out.println("INFO: Converted file '" + file + "'.");
+                        product.dispose();
+                    }
+                } catch (Exception e) {
+                    System.out.println("WARNING: Failed to convert file '" + file + "'.");
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
