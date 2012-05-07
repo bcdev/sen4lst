@@ -129,7 +129,7 @@ public class Main {
             final File[] files = new File(targetNcFilePath).getParentFile().listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
-                    return name.endsWith(".nc") && !name.endsWith("beam.nc");
+                    return name.endsWith(".nc") && !name.endsWith("beam.nc") && !name.startsWith("xeoCoordinates");
                 }
             });
             for (final File file : files) {
