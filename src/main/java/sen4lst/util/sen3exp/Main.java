@@ -15,6 +15,8 @@ package sen4lst.util.sen3exp;/*
  */
 
 import org.esa.beam.framework.dataio.ProductIO;
+import org.esa.beam.framework.dataio.ProductSubsetBuilder;
+import org.esa.beam.framework.dataio.ProductSubsetDef;
 import org.esa.beam.framework.datamodel.Product;
 
 import java.io.File;
@@ -127,14 +129,21 @@ public class Main {
             final File[] files = new File(targetNcFilePath).getParentFile().listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
-                    return name.endsWith(".nc") && !name.endsWith("beam.nc") && !name.startsWith("x");
+                    return name.endsWith(".nc") && !name.endsWith("beam.nc");
                 }
             });
             for (final File file : files) {
                 try {
-                    final Product product = ProductIO.readProduct(file, "NetCDF-CF");
+                    Product product = ProductIO.readProduct(file, "NetCDF-CF");
                     if (product != null) {
-                        ProductIO.writeProduct(product, file.getPath().replace(".nc", ".beam.nc"), "NetCDF-CF");
+                        if (file.getName().startsWith("x")) {
+                            final String subsetName = product.getName() + "_1km";
+                            final ProductSubsetDef subsetDef = new ProductSubsetDef(subsetName);
+                            subsetDef.setSubSampling(2, 2);
+                            product = ProductSubsetBuilder.createProductSubset(product, true, subsetDef, subsetName, null);
+                            product.setFileLocation(new File(file.getParentFile(), subsetName + ".nc"));
+                        }
+                        ProductIO.writeProduct(product, product.getFileLocation().getPath().replace(".nc", ".beam.nc"), "NetCDF-CF");
                         System.out.println("INFO: Converted file '" + file + "'.");
                         product.dispose();
                     }
