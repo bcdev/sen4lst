@@ -20,6 +20,7 @@ import org.esa.beam.framework.dataio.ProductSubsetDef;
 import org.esa.beam.framework.datamodel.Product;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URI;
@@ -33,79 +34,55 @@ import java.net.URISyntaxException;
 public class Main {
 
     public static void main(String args[]) {
-        generate(
-                "S3A_OL_1_EFR_20090622T095200_20090622T100200_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_NADIR_CAS_090622_0952Z_P01SF_OLCI_LAYER_300_mask_sub_all.bin",
-                "xeoCoordinates.cdl"
-        );
+        final File dataDir = new File("./data");
 
-        generate(
-                "S3A_OL_1_EFR_20090622T101100_20090622T102100_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_NADIR_CAS_090622_1011Z_P03SF_OLCI_LAYER_300_mask_sub_all.bin",
-                "xeoCoordinates.cdl"
-        );
+        final File[] olciDirs = dataDir.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.getName().startsWith("S3A_OL_1_EFR");
+            }
+        });
+        final File[] slstrDirs = dataDir.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.getName().startsWith("S3A_SL_1_SLT");
+            }
+        });
 
-        generate(
-                "S3A_OL_1_EFR_20090622T101900_20090622T102900_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_NADIR_CAS_090622_1019Z_P04SF_OLCI_LAYER_300_mask_sub_all.bin",
-                "xeoCoordinates.cdl"
-        );
+        for (final File dir : olciDirs) {
+            final File[] geoFiles = dir.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return file.getName().startsWith("GeoCode_Pattern");
+                }
+            });
+            generate(dir.getName().replace(".SAFE", ""), "xeoCoordinates.cdl", geoFiles[0].getPath());
+            convert(dir);
+        }
 
-        generate(
-                "S3A_OL_1_EFR_20090622T102900_20090622T103900_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_NADIR_CAS_090622_1029Z_P05SF_OLCI_LAYER_300_mask_sub_all.bin",
-                "xeoCoordinates.cdl"
-        );
-
-        generate(
-                "S3A_SL_1_SLT_20090622T095200_20090622T100200_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_NADIR_CAS_090622_0952Z_P01SF_SLSTR_LAYER_ALL_500_mask_sub_all.bin",
-                "xeodetic_an.cdl"
-        );
-        generate(
-                "S3A_SL_1_SLT_20090622T095200_20090622T100200_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_550_OV_CAS_090622_0952Z_P01SF_SLSTR_LAYER_ALL_500_mask_sub_all.bin",
-                "xeodetic_ao.cdl"
-        );
-
-        generate(
-                "S3A_SL_1_SLT_20090622T101100_20090622T102100_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_NADIR_CAS_090622_1011Z_P03SF_SLSTR_LAYER_ALL_500_mask_sub_all.bin",
-                "xeodetic_an.cdl"
-        );
-        generate(
-                "S3A_SL_1_SLT_20090622T101100_20090622T102100_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_550_OV_CAS_090622_1011Z_P03SF_SLSTR_LAYER_ALL_500_mask_sub_all.bin",
-                "xeodetic_ao.cdl"
-        );
-
-        generate(
-                "S3A_SL_1_SLT_20090622T101900_20090622T102900_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_NADIR_CAS_090622_1019Z_P04SF_SLSTR_LAYER_ALL_500_mask_sub_all.bin",
-                "xeodetic_an.cdl"
-        );
-        generate(
-                "S3A_SL_1_SLT_20090622T101900_20090622T102900_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_550_OV_CAS_090622_1019Z_P04SF_SLSTR_LAYER_ALL_500_mask_sub_all.bin",
-                "xeodetic_ao.cdl"
-        );
-
-        generate(
-                "S3A_SL_1_SLT_20090622T102900_20090622T103900_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_NADIR_CAS_090622_1029Z_P05SF_SLSTR_LAYER_ALL_500_mask_sub_all.bin",
-                "xeodetic_an.cdl"
-        );
-        generate(
-                "S3A_SL_1_SLT_20090622T102900_20090622T103900_000001_00600_001_ESR_TEST_01",
-                "GeoCode_Pattern_SEN4LST_TOA_550_OV_CAS_090622_1029Z_P05SF_SLSTR_LAYER_ALL_500_mask_sub_all.bin",
-                "xeodetic_ao.cdl"
-        );
+        for (final File dir : slstrDirs) {
+            File[] geoFiles;
+            geoFiles = dir.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return file.getName().startsWith("GeoCode_Pattern_SEN4LST_TOA_NADIR_CAS");
+                }
+            });
+            generate(dir.getName().replace(".SAFE", ""), "xeodetic_an.cdl", geoFiles[0].getPath());
+            geoFiles = dir.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return file.getName().startsWith("GeoCode_Pattern_SEN4LST_TOA_550_OV_CAS");
+                }
+            });
+            generate(dir.getName().replace(".SAFE", ""), "xeodetic_ao.cdl", geoFiles[0].getPath());
+            convert(dir);
+        }
     }
 
-    private static void generate(String productName, String geoFileName, String cdlResourceName) {
+    private static void generate(String productName, String cdlResourceName, String geoFilePath) {
         try {
             final LatLonGenerator g = new LatLonGenerator();
-            final String geoFilePath = createGeoFilePath(productName, geoFileName);
             g.geoFilePath(geoFilePath);
             g.latFilePath(createTempFile("lat", ".txt").getPath());
             g.lonFilePath(createTempFile("lon", ".txt").getPath());
@@ -125,39 +102,38 @@ public class Main {
             fileGenerator.getProperties().setProperty("LON", g.getLonFilePath());
             fileGenerator.getProperties().setProperty("PRODUCT_NAME", productName);
             fileGenerator.generateDataset();
-
-            final File[] files = new File(targetNcFilePath).getParentFile().listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".nc") && !name.endsWith("beam.nc") && !name.startsWith("xeoCoordinates");
-                }
-            });
-            for (final File file : files) {
-                try {
-                    Product product = ProductIO.readProduct(file, "NetCDF-CF");
-                    if (product != null) {
-                        if (file.getName().startsWith("x")) {
-                            final String subsetName = product.getName() + "_1km";
-                            final ProductSubsetDef subsetDef = new ProductSubsetDef(subsetName);
-                            subsetDef.setSubSampling(2, 2);
-                            product = ProductSubsetBuilder.createProductSubset(product, true, subsetDef, subsetName, null);
-                            product.setFileLocation(new File(file.getParentFile(), subsetName + ".nc"));
-                        }
-                        ProductIO.writeProduct(product, product.getFileLocation().getPath().replace(".nc", ".beam.nc"), "NetCDF-CF");
-                        System.out.println("INFO: Converted file '" + file + "'.");
-                        product.dispose();
-                    }
-                } catch (Exception e) {
-                    System.out.println("WARNING: Failed to convert file '" + file + "'.");
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static String createGeoFilePath(String productName, String geoFileName) {
-        return new File(new File("data", productName + ".SAFE"), geoFileName).getPath();
+    private static void convert(File dir) {
+        final File[] files = dir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".nc") && !name.endsWith("beam.nc") && !name.startsWith("xeoCoordinates");
+            }
+        });
+        for (final File file : files) {
+            try {
+                Product product = ProductIO.readProduct(file, "NetCDF-CF");
+                if (product != null) {
+                    if (file.getName().startsWith("x")) {
+                        final String subsetName = product.getName() + "_1km";
+                        final ProductSubsetDef subsetDef = new ProductSubsetDef(subsetName);
+                        subsetDef.setSubSampling(2, 2);
+                        product = ProductSubsetBuilder.createProductSubset(product, true, subsetDef, subsetName, null);
+                        product.setFileLocation(new File(file.getParentFile(), subsetName + ".nc"));
+                    }
+                    ProductIO.writeProduct(product, product.getFileLocation().getPath().replace(".nc", ".beam.nc"),
+                                           "NetCDF-CF");
+                    System.out.println("INFO: Converted file '" + file + "'.");
+                    product.dispose();
+                }
+            } catch (Exception e) {
+                System.out.println("WARNING: Failed to convert file '" + file + "'.");
+            }
+        }
     }
 
     private static String createTargetNcFilePath(String productName, String cdlResourceName) {
