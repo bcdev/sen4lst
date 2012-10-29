@@ -1,4 +1,4 @@
-package sen4lst.util.sen3exp;/*
+package org.esa.beam.sen4lst.util.sen3exp;/*
  * Copyright (C) 2012 Brockmann Consult GmbH (info@brockmann-consult.de)
  *
  * This program is free software; you can redistribute it and/or modify it

@@ -1,4 +1,4 @@
-package sen4lst.util.sen3exp;
+package org.esa.beam.sen4lst.util.sen3exp;
 
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;

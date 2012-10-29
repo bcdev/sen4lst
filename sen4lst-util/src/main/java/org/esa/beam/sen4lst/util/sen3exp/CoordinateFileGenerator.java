@@ -1,4 +1,4 @@
-package sen4lst.util.sen3exp;
+package org.esa.beam.sen4lst.util.sen3exp;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
