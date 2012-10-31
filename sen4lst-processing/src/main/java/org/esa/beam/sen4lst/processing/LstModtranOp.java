@@ -6,6 +6,7 @@ import org.esa.beam.framework.datamodel.ProductData;
 import org.esa.beam.framework.gpf.OperatorException;
 import org.esa.beam.framework.gpf.OperatorSpi;
 import org.esa.beam.framework.gpf.annotations.OperatorMetadata;
+import org.esa.beam.framework.gpf.annotations.Parameter;
 import org.esa.beam.framework.gpf.annotations.SourceProduct;
 import org.esa.beam.framework.gpf.pointop.*;
 
@@ -20,8 +21,11 @@ import org.esa.beam.framework.gpf.pointop.*;
                   description = "Computes LST from MODTRAN simulation data.")
 public class LstModtranOp extends PixelOperator {
 
-    @SourceProduct(alias = "l1b", description = "ENVI source product")
+    @SourceProduct(alias = "source", description = "ENVI source product")
     private Product sourceProduct;
+
+    @Parameter(description = "Water vapour content value from a distinct standard atmosphere, taken from auxiliary data")
+    private double waterVapourContent;
 
     private static final int SRC_NADIR_BT_8 = 9;
     private static final int SRC_NADIR_BT_9 = 10;
@@ -29,35 +33,63 @@ public class LstModtranOp extends PixelOperator {
     private static final int SRC_OBLIQUE_RADIANCE_9 = 12;
     private static final int SRC_OBLIQUE_BT_8 = 13;
     private static final int SRC_OBLIQUE_BT_9 = 14;
-    private static final int SRC_LST_INPUT = 15;
+    private static final int SRC_LST_INSITU = 15;
     private static final int SRC_NADIR_EMISSIVITY_8 = 16;
-    private static final int SRC_OBLIQUE_EMISSIVITY_8 = 17;
-    private static final int SRC_NADIR_EMISSIVITY_9 = 18;
+    private static final int SRC_NADIR_EMISSIVITY_9 = 17;
+    private static final int SRC_OBLIQUE_EMISSIVITY_8 = 18;
     private static final int SRC_OBLIQUE_EMISSIVITY_9 = 19;
 
     @Override
     protected void computePixel(int x, int y, Sample[] sourceSamples, WritableSample[] targetSamples) {
 
-        // todo: implement as given from IDL code below
+        final double bt8N = sourceSamples[SRC_NADIR_BT_8].getDouble();
+        final double bt9N = sourceSamples[SRC_NADIR_BT_9].getDouble();
+        final double bt8O = sourceSamples[SRC_OBLIQUE_BT_8].getDouble();
+        final double bt9O = sourceSamples[SRC_OBLIQUE_BT_9].getDouble();  // not needed? // todo: clarify
+        final double lstInsitu = sourceSamples[SRC_LST_INSITU].getDouble();
+        final double emiss8N = sourceSamples[SRC_NADIR_EMISSIVITY_8].getDouble();
+        final double emiss9N = sourceSamples[SRC_NADIR_EMISSIVITY_9].getDouble();
+        final double emiss8O = sourceSamples[SRC_OBLIQUE_EMISSIVITY_8].getDouble();
+        final double emiss9O = sourceSamples[SRC_OBLIQUE_EMISSIVITY_9].getDouble();
 
-//        openu, 1, path+'simulation_TOA_SLSTR_modtran\'+name
-//        mat=assoc(1, fltarr(sam,fil))
-//        T8n=mat(9) & T9n=mat(10) & T8o=mat(13) & T9o=mat(14) & lst_situ=mat(15)
-//        e8n=mat(16) & e9n=mat(17) & e8o=mat(18) & e9o=mat(19)
-//        close, 1
-//
-//        emn=0.5*(e8n+e9n) & den=e8n-e9n
-//        emo=0.5*(e8o+e9o) & deo=e8o-e9o
-//        w=wvec(j)
-//
-//        c=[-0.268,1.084,0.277,45.11,-0.73,-125.00,16.70];LST SW algorithm coefficients
-//        lst_sw=T8n+c(1)*(T8n-T9n)+c(2)*((T8n-T9n)^2)+c(0)+(c(3)+c(4)*w)*(1-emn)+(c(5)+c(6)*w)*den
-//
-//        c=[-0.441,1.790,0.221,64.26,-7.60,-30.18,3.14];LST DA algorithm coefficients
-//        lst_da=T8n+c(1)*(T8n-T8o)+c(2)*((T8n-T8o)^2)+c(0)+(c(3)+c(4)*w)*(1-emo)+(c(5)+c(6)*w)*deo
-//
-//        c=[-0.510,-0.053,-0.180,2.13,0.377,71.4,-10.04,-5.9,1.01];LST SW-DA algorithm coefficients
-//        lst_swda=T8n+c(1)*(T8n-T9n)+c(2)*((T8n-T9n)^2)+c(0)+c(3)*(T8n-T8o)+c(4)*((T8n-T8o)^2)+(c(5)+c(6)*w)*(1-emn)+(c(7)+c(8)*w)*den
+        final double btNadirDiff = bt8N - bt9N;
+        final double bt8NadirObliqueDiff = bt8N - bt8O;
+        final double emissNadir = 0.5 * (emiss8N + emiss9N);
+        final double emissNadirDiff = emiss8N - emiss9N;
+        final double emissOblique = 0.5 * (emiss8O + emiss9O);
+        final double emissObliqueDiff = emiss8O - emiss9O;
+
+        int targetIndex = 0;
+
+        final double lstSw = bt8N +
+                LstConstants.LST_SW_COEFFS[0] +
+                LstConstants.LST_SW_COEFFS[1]*btNadirDiff +
+                LstConstants.LST_SW_COEFFS[2]*btNadirDiff*btNadirDiff +
+                (LstConstants.LST_SW_COEFFS[3] + LstConstants.LST_SW_COEFFS[4]*waterVapourContent)*(1.0-emissNadir) +
+                (LstConstants.LST_SW_COEFFS[5] + LstConstants.LST_SW_COEFFS[6]*waterVapourContent)*emissNadirDiff;
+
+        targetSamples[targetIndex++].set(lstSw);
+
+        final double lstDa = bt8N +
+                LstConstants.LST_DA_COEFFS[0] +
+                LstConstants.LST_DA_COEFFS[1]*bt8NadirObliqueDiff +
+                LstConstants.LST_DA_COEFFS[2]*bt8NadirObliqueDiff*bt8NadirObliqueDiff +
+                (LstConstants.LST_DA_COEFFS[3] + LstConstants.LST_DA_COEFFS[4]*waterVapourContent)*(1.0-emissOblique) +
+                (LstConstants.LST_DA_COEFFS[5] + LstConstants.LST_DA_COEFFS[6]*waterVapourContent)*emissObliqueDiff;
+
+        targetSamples[targetIndex++].set(lstDa);
+
+        final double lstSwda = bt8N +
+                LstConstants.LST_SWDA_COEFFS[0] +
+                LstConstants.LST_SWDA_COEFFS[1]*btNadirDiff +
+                LstConstants.LST_SWDA_COEFFS[2]*btNadirDiff*btNadirDiff +
+                LstConstants.LST_SWDA_COEFFS[3]*bt8NadirObliqueDiff +
+                LstConstants.LST_SWDA_COEFFS[4]*bt8NadirObliqueDiff*bt8NadirObliqueDiff +
+                (LstConstants.LST_SWDA_COEFFS[5] + LstConstants.LST_SWDA_COEFFS[6]*waterVapourContent)*(1.0-emissNadir) +
+                (LstConstants.LST_SWDA_COEFFS[7] + LstConstants.LST_SWDA_COEFFS[8]*waterVapourContent)*emissNadirDiff;
+
+        targetSamples[targetIndex++].set(lstSwda);
+        targetSamples[targetIndex].set(lstInsitu);
     }
 
     @Override
@@ -80,15 +112,15 @@ public class LstModtranOp extends PixelOperator {
         }
 
         sampleConfigurer.defineSample(SRC_NADIR_BT_8, LstConstants.NADIR_BT_8_BAND_NAME, sourceProduct);
-        sampleConfigurer.defineSample(SRC_NADIR_BT_9, LstConstants.NADIR_BT_8_BAND_NAME, sourceProduct);
+        sampleConfigurer.defineSample(SRC_NADIR_BT_9, LstConstants.NADIR_BT_9_BAND_NAME, sourceProduct);
         sampleConfigurer.defineSample(SRC_OBLIQUE_RADIANCE_8, LstConstants.OBLIQUE_RADIANCE_8_BAND_NAME, sourceProduct);
         sampleConfigurer.defineSample(SRC_OBLIQUE_RADIANCE_9, LstConstants.OBLIQUE_RADIANCE_9_BAND_NAME, sourceProduct);
         sampleConfigurer.defineSample(SRC_OBLIQUE_BT_8, LstConstants.OBLIQUE_BT_8_BAND_NAME, sourceProduct);
         sampleConfigurer.defineSample(SRC_OBLIQUE_BT_9, LstConstants.OBLIQUE_BT_9_BAND_NAME, sourceProduct);
-        sampleConfigurer.defineSample(SRC_LST_INPUT, LstConstants.LST_INPUT_BAND_NAME, sourceProduct);
+        sampleConfigurer.defineSample(SRC_LST_INSITU, LstConstants.LST_INSITU_BAND_NAME, sourceProduct);
         sampleConfigurer.defineSample(SRC_NADIR_EMISSIVITY_8, LstConstants.NADIR_EMISSIVITY_8_BAND_NAME, sourceProduct);
-        sampleConfigurer.defineSample(SRC_OBLIQUE_EMISSIVITY_8, LstConstants.OBLIQUE_EMISSIVITY_8_BAND_NAME, sourceProduct);
         sampleConfigurer.defineSample(SRC_NADIR_EMISSIVITY_9, LstConstants.NADIR_EMISSIVITY_9_BAND_NAME, sourceProduct);
+        sampleConfigurer.defineSample(SRC_OBLIQUE_EMISSIVITY_8, LstConstants.OBLIQUE_EMISSIVITY_8_BAND_NAME, sourceProduct);
         sampleConfigurer.defineSample(SRC_OBLIQUE_EMISSIVITY_9, LstConstants.OBLIQUE_EMISSIVITY_9_BAND_NAME, sourceProduct);
     }
 

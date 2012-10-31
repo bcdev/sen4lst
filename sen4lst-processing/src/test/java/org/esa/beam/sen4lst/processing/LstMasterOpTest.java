@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
-public class LstModtranOpTest {
+public class LstMasterOpTest {
 
     private Product target;
 
@@ -42,8 +42,24 @@ public class LstModtranOpTest {
     }
 
     @Test
-    public void testSomething() throws OperatorException {
-       assertTrue(true);
+    public void testReadAtmosphereAuxdata() throws OperatorException {
+
+        assertNotNull(StandardAtmosphere.getInstance());
+
+        int atmosphereId = 1;
+        assertEquals(2, StandardAtmosphere.getInstance().getAtmosphereId(atmosphereId));
+        assertEquals("TRO", StandardAtmosphere.getInstance().getAtmosphereModel(atmosphereId));
+        assertEquals(2.469, StandardAtmosphere.getInstance().getAtmosphereWaterVapour(atmosphereId), 1.E-3);
+
+        atmosphereId = 31;
+        assertEquals(32, StandardAtmosphere.getInstance().getAtmosphereId(atmosphereId));
+        assertEquals("MLW", StandardAtmosphere.getInstance().getAtmosphereModel(atmosphereId));
+        assertEquals(1.192, StandardAtmosphere.getInstance().getAtmosphereWaterVapour(atmosphereId), 1.E-3);
+
+        atmosphereId = 65;
+        assertEquals(66, StandardAtmosphere.getInstance().getAtmosphereId(atmosphereId));
+        assertEquals("USS", StandardAtmosphere.getInstance().getAtmosphereModel(atmosphereId));
+        assertEquals(2.125, StandardAtmosphere.getInstance().getAtmosphereWaterVapour(atmosphereId), 1.E-3);
     }
 
 }
