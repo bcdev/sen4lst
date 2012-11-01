@@ -59,8 +59,6 @@ public class LstModtranOp extends PixelOperator {
         final double emissOblique = 0.5 * (emiss8O + emiss9O);
         final double emissObliqueDiff = emiss8O - emiss9O;
 
-        int targetIndex = 0;
-
         final double lstSw = bt8N +
                 LstConstants.LST_SW_COEFFS[0] +
                 LstConstants.LST_SW_COEFFS[1]*btNadirDiff +
@@ -68,16 +66,12 @@ public class LstModtranOp extends PixelOperator {
                 (LstConstants.LST_SW_COEFFS[3] + LstConstants.LST_SW_COEFFS[4]*waterVapourContent)*(1.0-emissNadir) +
                 (LstConstants.LST_SW_COEFFS[5] + LstConstants.LST_SW_COEFFS[6]*waterVapourContent)*emissNadirDiff;
 
-        targetSamples[targetIndex++].set(lstSw);
-
         final double lstDa = bt8N +
                 LstConstants.LST_DA_COEFFS[0] +
                 LstConstants.LST_DA_COEFFS[1]*bt8NadirObliqueDiff +
                 LstConstants.LST_DA_COEFFS[2]*bt8NadirObliqueDiff*bt8NadirObliqueDiff +
                 (LstConstants.LST_DA_COEFFS[3] + LstConstants.LST_DA_COEFFS[4]*waterVapourContent)*(1.0-emissOblique) +
                 (LstConstants.LST_DA_COEFFS[5] + LstConstants.LST_DA_COEFFS[6]*waterVapourContent)*emissObliqueDiff;
-
-        targetSamples[targetIndex++].set(lstDa);
 
         final double lstSwda = bt8N +
                 LstConstants.LST_SWDA_COEFFS[0] +
@@ -88,6 +82,10 @@ public class LstModtranOp extends PixelOperator {
                 (LstConstants.LST_SWDA_COEFFS[5] + LstConstants.LST_SWDA_COEFFS[6]*waterVapourContent)*(1.0-emissNadir) +
                 (LstConstants.LST_SWDA_COEFFS[7] + LstConstants.LST_SWDA_COEFFS[8]*waterVapourContent)*emissNadirDiff;
 
+        int targetIndex = 0;
+
+        targetSamples[targetIndex++].set(lstSw);
+        targetSamples[targetIndex++].set(lstDa);
         targetSamples[targetIndex++].set(lstSwda);
         targetSamples[targetIndex].set(lstInsitu);
     }
