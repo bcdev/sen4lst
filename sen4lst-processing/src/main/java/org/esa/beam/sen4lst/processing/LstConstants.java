@@ -30,4 +30,6 @@ public class LstConstants {
 
     public static final String MODTRAN_FILENAME_PREFIX = "SEN4LST_TOA_";
 
+    public static double NDVI_MIN = -10.0;  // minimum NDVI considered for extrema search
+
 }
