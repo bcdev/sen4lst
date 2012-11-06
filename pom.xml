@@ -72,6 +72,7 @@
     <modules>
         <module>sen4lst-bootstrap</module>
         <module>sen4lst-processing</module>
+        <module>sen4lst-synergy</module>
         <module>sen4lst-util</module>
     </modules>
 
@@ -164,6 +165,12 @@
                 <groupId>org.esa.beam</groupId>
                 <artifactId>beam-envi-reader</artifactId>
                 <version>3.1-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.esa.beam.synergy</groupId>
+                <artifactId>beam-meris-aatsr-synergy-preprocessing</artifactId>
+                <version>1.2.3</version>
             </dependency>
 
             <!-- JUnit Libraries ############################################# -->

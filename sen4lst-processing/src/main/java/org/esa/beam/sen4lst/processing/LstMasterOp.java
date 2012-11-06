@@ -3,7 +3,6 @@ package org.esa.beam.sen4lst.processing;
 import org.esa.beam.framework.dataio.ProductIO;
 import org.esa.beam.framework.datamodel.Band;
 import org.esa.beam.framework.datamodel.Product;
-import org.esa.beam.framework.datamodel.ProductData;
 import org.esa.beam.framework.gpf.Operator;
 import org.esa.beam.framework.gpf.OperatorException;
 import org.esa.beam.framework.gpf.OperatorSpi;
@@ -171,7 +170,7 @@ public class LstMasterOp extends Operator {
 
         final Band[] sourceBands = sourceProduct.getBands();
         for (Band sourceBand : sourceBands) {
-            RenderedImage scaledImage = getScaledImage(sourceBand.getGeophysicalImage(), xScale, yScale);
+            RenderedImage scaledImage = getVerticalScaledImage(sourceBand.getGeophysicalImage(), xScale, yScale);
             final Band targetBand = scaledProduct.addBand(sourceBand.getName(), sourceBand.getDataType());
             targetBand.setSourceImage(scaledImage);
         }
@@ -179,7 +178,7 @@ public class LstMasterOp extends Operator {
         return scaledProduct;
     }
 
-    private static RenderedImage getScaledImage(PlanarImage image, float xScale, float yScale) {
+    static RenderedImage getVerticalScaledImage(PlanarImage image, float xScale, float yScale) {
 
         // first shift by half of the average interval to get finally the same as IDL CONGRID function
         ParameterBlock pb = new ParameterBlock();
@@ -203,26 +202,26 @@ public class LstMasterOp extends Operator {
         return JAI.create("scale", pb, null);
     }
 
-    private static double[] getImageMinMaxValues(PlanarImage image, int inclusionThreshold) {
+    static double[] getImageMinMaxValues(PlanarImage image, int inclusionThreshold) {
         ParameterBlock pb = new ParameterBlock();
         pb.addSource(image);   // The source image
-//        pb.add(null);       // null ROI means whole image
-        // this hopefully means that pixel values < inclusionThreshold are not considered: // todo: check and test this!
+        // this means that pixel values < inclusionThreshold are not considered:
         pb.add(new ROI(image, inclusionThreshold));
         pb.add(1);          // check every pixel horizontally
         pb.add(1);          // check every pixel vertically
 
-        // Perform the mean operation on the source image.
+        // Perform the extrema operation on the source image.
         RenderedImage minMaxImage = JAI.create("extrema", pb, null);
 
-        // Retrieve and report the mean pixel value.
+        // Retrieve the min and max pixel values.
+        // (these values are both 0 if  inclusionThreshold is greater than maximum of the image)
         final double[][] extrema = (double[][]) minMaxImage.getProperty("extrema");
 
         return new double[]{extrema[0][0], extrema[1][0]};   // max is extrema[1], min is extrema[0]
     }
 
-    private static double[] getNdviMinMax(Band b1, Band b2) {
-        // retrieve minimum of ndvi computed as (b2 - b1)(b2 + b1)
+    static double[] getNdviMinMax(Band b1, Band b2) {
+        // retrieve minimum ndvi of whole image, computed as (b2 - b1)/(b2 + b1)
         RenderedImage b1Image = b1.getSourceImage();
         RenderedImage b2Image = b2.getSourceImage();
         RenderedOp diffImage = SubtractDescriptor.create(b2Image, b1Image, null);
