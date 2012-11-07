@@ -47,9 +47,9 @@ public class MerisAatsrSynergyOp extends Operator {
         // todo:
         // - from MERIS and AATSR L1b input files, generate Synergy product with all bands
         //   required as input for LST retrieval. These are (see Table 2, Swansea Synergy ATBD, July 2010):
-        //     - MERIS SDR b7, b12 (665nm, 753nm, as equivalent to OLCI b8, b17 (665nm, 764nm))
-        //     - AATSR nadir SDR b2, b3 (550nm, 665nm, as equivalent to SLSTR nadir b2, b3)
-        //     - AATSR oblique SDR b2, b3 (550nm, 665nm, as equivalent to SLSTR oblique b2, b3)
+        //     - MERIS SDR b7, b10 (665nm, 753nm, as equivalent to OLCI b8, b17 (665nm, 764nm))
+        //     - AATSR nadir SDR b1, b2 (550nm, 665nm, as equivalent to SLSTR nadir b1, b2)
+        //     - AATSR oblique SDR b1, b2 (550nm, 665nm, as equivalent to SLSTR oblique b1, b2)
         //     - AATSR nadir BT2, BT3 (10850nm, 12000nm, as equivalent to SLSTR nadir BT3, BT4)
         //
         //   for this, re-use MERIS/AATSR Synergy modules, but clean and strip off SDR retrieval to required bands

@@ -8,6 +8,8 @@ import org.esa.beam.framework.gpf.OperatorException;
 import org.esa.beam.framework.gpf.OperatorSpi;
 import org.esa.beam.framework.gpf.annotations.OperatorMetadata;
 import org.esa.beam.framework.gpf.annotations.Parameter;
+import org.esa.beam.framework.gpf.annotations.SourceProduct;
+import org.esa.beam.sen4lst.synergy.MerisAatsrConstants;
 import org.esa.beam.util.ProductUtils;
 
 import javax.media.jai.*;
@@ -30,8 +32,16 @@ import java.io.IOException;
                   description = "Sen4LST master operator for LST retrievals.")
 public class LstMasterOp extends Operator {
 
+    @SourceProduct(alias = "MERIS_AATSR",
+                   optional = true,
+                   description = "MERIS/AATSR SDR source product.")
+    Product merisAatsrProduct;
+
     @Parameter(defaultValue = "", description = "Sen4LST data directory") // e.g., /data/sen4lst/input
-    private String lstDataDir;
+    private String lstSimulationDataDir;
+
+    @Parameter(defaultValue = "false", description = "Set to true if simulation data is used")
+    private boolean simulation;
 
     @Parameter(defaultValue = "false", description = "Set to true if old simulation data is used")
     private boolean oldSimulationData;
@@ -52,11 +62,39 @@ public class LstMasterOp extends Operator {
 
     @Override
     public void initialize() throws OperatorException {
-        if (oldSimulationData) {
-            retrieveLstGeolocated();
+        if (simulation) {
+            if (oldSimulationData) {
+                retrieveLstGeolocated();
+            } else {
+                retrieveLstModtran();
+            }
         } else {
-            retrieveLstModtran();
+            // MERIS/AATSR real data
+            retrieveLstMerisAatsr();
         }
+    }
+
+    private void retrieveLstMerisAatsr() {
+        // get minimum NDVIs:
+        final Band merisB7Band = merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_SDR_665_BANDNAME);
+        final Band merisB10Band = merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_SDR_753_BANDNAME);
+        final double[] merisNdviMinMax = getNdviMinMax(merisB7Band, merisB10Band);
+
+        final Band aatsrNadirSdrB1Band = merisAatsrProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_555_BANDNAME);
+        final Band aatsrNadirSdrB2Band = merisAatsrProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_659_BANDNAME);
+        final double[] aatsrNadirNdviMinMax = getNdviMinMax(aatsrNadirSdrB1Band, aatsrNadirSdrB2Band);
+
+        LstMerisAatsrOp lstOp = new LstMerisAatsrOp();
+        lstOp.setSourceProduct("merisAatsrProduct", merisAatsrProduct);
+        lstOp.setParameter("merisNdviMinMax", merisNdviMinMax);
+        lstOp.setParameter("aatsrNadirNdviMinMax", aatsrNadirNdviMinMax);
+
+        final Product lstProduct = lstOp.getTargetProduct();
+        ProductUtils.copyFlagBands(merisAatsrProduct, lstProduct, true);
+        ProductUtils.copyFlagCodings(merisAatsrProduct, lstProduct);
+        ProductUtils.copyMasks(merisAatsrProduct, lstProduct);
+
+        setTargetProduct(lstProduct);
     }
 
     private void retrieveLstGeolocated() {
@@ -133,32 +171,32 @@ public class LstMasterOp extends Operator {
         // OLCI_300m_z1, SLSTRn_500m_z1, SLSTRn_1km_z1, SLSTRo_500m_z1, SLSTRo_1km_z1
 
         final String geolocatedFileSuffix = "_z" + String.format("%01d", atmosphereId) + ".hdr";
-        final String[] geolocatedFileNames = (new File(lstDataDir)).list();
+        final String[] geolocatedFileNames = (new File(lstSimulationDataDir)).list();
 
         for (String geolocatedFileName : geolocatedFileNames) {
             final String matchingFilename = productIdentifier.toLowerCase() + geolocatedFileSuffix;
             if (geolocatedFileName.toLowerCase().equals(matchingFilename)) {
-                String geolocatedProductFileName = lstDataDir + File.separator + geolocatedFileName;
+                String geolocatedProductFileName = lstSimulationDataDir + File.separator + geolocatedFileName;
                 return ProductIO.readProduct(geolocatedProductFileName);
             }
         }
-        throw new OperatorException("No Geolocated simulation input product found in '" + lstDataDir + "'.");
+        throw new OperatorException("No Geolocated simulation input product found in '" + lstSimulationDataDir + "'.");
     }
 
     private Product getModtranInputProduct() throws IOException {
         // SEN4LST_TOA_090620_0943Z_ATM01.HDR
 
         final String modtranFileSuffix = "_ATM" + String.format("%02d", atmosphereId) + ".HDR";
-        final String[] modtranFileNames = (new File(lstDataDir)).list();
+        final String[] modtranFileNames = (new File(lstSimulationDataDir)).list();
 
         for (String modtranFileName : modtranFileNames) {
             final String matchingFilename = LstConstants.MODTRAN_FILENAME_PREFIX + timestampModtran + modtranFileSuffix;
             if (modtranFileName.toUpperCase().equals(matchingFilename)) {
-                String modtranProductFileName = lstDataDir + File.separator + modtranFileName.toUpperCase();
+                String modtranProductFileName = lstSimulationDataDir + File.separator + modtranFileName.toUpperCase();
                 return ProductIO.readProduct(modtranProductFileName);
             }
         }
-        throw new OperatorException("No Modtran simulation input product found in '" + lstDataDir + "'.");
+        throw new OperatorException("No Modtran simulation input product found in '" + lstSimulationDataDir + "'.");
     }
 
     private static Product getScaledProduct(Product sourceProduct) {
@@ -166,7 +204,7 @@ public class LstMasterOp extends Operator {
         final float yScale = (float) LstGeolocatedOp.TARGET_HEIGHT / sourceProduct.getSceneRasterHeight();
 
         final Product scaledProduct = new Product(sourceProduct.getName(), sourceProduct.getProductType(),
-                                            LstGeolocatedOp.TARGET_WIDTH, LstGeolocatedOp.TARGET_HEIGHT);
+                                                  LstGeolocatedOp.TARGET_WIDTH, LstGeolocatedOp.TARGET_HEIGHT);
 
         final Band[] sourceBands = sourceProduct.getBands();
         for (Band sourceBand : sourceBands) {
