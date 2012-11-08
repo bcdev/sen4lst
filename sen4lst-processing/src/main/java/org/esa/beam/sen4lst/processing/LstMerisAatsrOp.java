@@ -123,7 +123,7 @@ public class LstMerisAatsrOp extends PixelOperator {
         final int synergyCloudFlags = sourceSamples[SRC_SYNERGY_CLOUD_FLAGS].getInt();   // 16
         final boolean isCloud = (synergyCloudFlags & (1 << synergyCloudFlagBit)) != 0;
 
-        if (isLand && !isCloud) {
+        if (isAllInputsValid(sourceSamples) && !isCloud) {
             final double merisb7 = sourceSamples[SRC_MERIS_7].getDouble();
             final double merisb10 = sourceSamples[SRC_MERIS_10].getDouble();
 
@@ -196,6 +196,20 @@ public class LstMerisAatsrOp extends PixelOperator {
             targetSamples[1].set(Double.NaN);
             targetSamples[2].set(Double.NaN);
         }
+    }
+
+    private boolean isAllInputsValid(Sample[] sourceSamples) {
+        for (int i = 0; i <= 5; i++) {
+            if (sourceSamples[i].getDouble() < 0 || sourceSamples[i].getDouble() > 1) {
+                return false;
+            }
+        }
+        for (int i = 6; i <= 9; i++) {
+            if (sourceSamples[i].getDouble() < 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
