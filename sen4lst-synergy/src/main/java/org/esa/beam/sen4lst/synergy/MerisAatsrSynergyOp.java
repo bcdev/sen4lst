@@ -9,7 +9,6 @@ import org.esa.beam.framework.gpf.annotations.OperatorMetadata;
 import org.esa.beam.framework.gpf.annotations.SourceProduct;
 import org.esa.beam.framework.gpf.annotations.TargetProduct;
 import org.esa.beam.synergy.operators.CreateSynergyOp;
-import org.esa.beam.synergy.operators.RetrieveAerosolOp;
 import org.esa.beam.synergy.operators.SynergyCloudScreeningOp;
 import org.esa.beam.synergy.util.SynergyConstants;
 import org.esa.beam.synergy.util.SynergyUtils;
@@ -44,7 +43,6 @@ public class MerisAatsrSynergyOp extends Operator {
     @Override
     public void initialize() throws OperatorException {
 
-        // todo:
         // - from MERIS and AATSR L1b input files, generate Synergy product with all bands
         //   required as input for LST retrieval. These are (see Table 2, Swansea Synergy ATBD, July 2010):
         //     - MERIS SDR b7, b10 (665nm, 753nm, as equivalent to OLCI b8, b17 (665nm, 764nm))

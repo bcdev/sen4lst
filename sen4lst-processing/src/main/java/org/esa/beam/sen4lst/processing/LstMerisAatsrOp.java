@@ -79,8 +79,8 @@ public class LstMerisAatsrOp extends PixelOperator {
 
     @Override
     protected void configureSourceSamples(SampleConfigurer sampleConfigurer) throws OperatorException {
-        sampleConfigurer.defineSample(SRC_MERIS_7, MerisAatsrConstants.MERIS_SDR_665_BANDNAME, merisAatsrProduct);
-        sampleConfigurer.defineSample(SRC_MERIS_10, MerisAatsrConstants.MERIS_SDR_665_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_MERIS_7, MerisAatsrConstants.MERIS_SDR_620_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_MERIS_10, MerisAatsrConstants.MERIS_SDR_753_BANDNAME, merisAatsrProduct);
 
         sampleConfigurer.defineSample(SRC_AATSR_NADIR_SDR_1, MerisAatsrConstants.AATSR_NADIR_SDR_555_BANDNAME, merisAatsrProduct);
         sampleConfigurer.defineSample(SRC_AATSR_NADIR_SDR_2, MerisAatsrConstants.AATSR_NADIR_SDR_659_BANDNAME, merisAatsrProduct);
@@ -127,8 +127,7 @@ public class LstMerisAatsrOp extends PixelOperator {
             final double merisb7 = sourceSamples[SRC_MERIS_7].getDouble();
             final double merisb10 = sourceSamples[SRC_MERIS_10].getDouble();
 
-            final double aatsrNadirSdrB1 = sourceSamples[SRC_AATSR_NADIR_SDR_1].getDouble();
-            final double aatsrNadirSdrB2 = sourceSamples[SRC_AATSR_NADIR_SDR_2].getDouble();
+
 
             final double aatsrNadirBt2 = sourceSamples[SRC_AATSR_NADIR_BT_2].getDouble();
             final double aatsrNadirBt3 = sourceSamples[SRC_AATSR_NADIR_BT_3].getDouble();
@@ -136,29 +135,29 @@ public class LstMerisAatsrOp extends PixelOperator {
             final double aatsrFwardBt2 = sourceSamples[SRC_AATSR_FWARD_BT_2].getDouble();
             final double aatsrFwardBt3 = sourceSamples[SRC_AATSR_FWARD_BT_3].getDouble();
 
-            final double ndviMeris = (merisb10 - merisb7) / (merisb10 + merisb7);
             final double bt2N = aatsrNadirBt2;
             final double bt3N = aatsrNadirBt3;
             final double bt2O = aatsrFwardBt2;
-            final double bt3O = aatsrFwardBt3;   // not needed? // todo: clarify
-            final double merisNdviMin = merisNdviMinMax[0];
-            final double merisNdviMax = merisNdviMinMax[1];
+            final double bt3O = aatsrFwardBt3;   // not needed? ok!
 
-            final double fvcMeris = (ndviMeris - merisNdviMin) / (merisNdviMax - merisNdviMin);
-            final double eMerisB1 = 0.970 * (1 - fvcMeris) + (0.982 + 0.005) * fvcMeris;
-            final double eMerisB2 = 0.977 * (1 - fvcMeris) + (0.984 + 0.005) * fvcMeris;
-//        final double emMeris = 0.5 * (eMerisB1 + eMerisB2);   // currently not needed
-//        final double deMeris = eMerisB1 - eMerisB2;   // currently not needed
+            // use MERIS NDVI:
+//            final double ndviMeris = (merisb10 - merisb7) / (merisb10 + merisb7);
+//            final double merisNdviMin = merisNdviMinMax[0];
+//            final double merisNdviMax = merisNdviMinMax[1];
+//            final double fvc = (ndviMeris - merisNdviMin) / (merisNdviMax - merisNdviMin);
 
+            // use AATSR NDVI:
+            final double aatsrNadirSdrB1 = sourceSamples[SRC_AATSR_NADIR_SDR_1].getDouble();
+            final double aatsrNadirSdrB2 = sourceSamples[SRC_AATSR_NADIR_SDR_2].getDouble();
             final double ndviAatsrNadir = (aatsrNadirSdrB2 - aatsrNadirSdrB1) / (aatsrNadirSdrB2 + aatsrNadirSdrB1);
             final double aatsrNadirNdviMin = aatsrNadirNdviMinMax[0];
             final double aatsrNadirNdviMax = aatsrNadirNdviMinMax[1];
+            final double fvc = (ndviAatsrNadir - aatsrNadirNdviMin) / (aatsrNadirNdviMax - aatsrNadirNdviMin);
 
-            final double fvcAatsrNadir = (ndviAatsrNadir - aatsrNadirNdviMin) / (aatsrNadirNdviMax - aatsrNadirNdviMin);
-            final double eAatsrNadirB1 = 0.970 * (1 - fvcAatsrNadir) + (0.982 + 0.005) * fvcAatsrNadir;
-            final double eAatsrNadirB2 = 0.977 * (1 - fvcAatsrNadir) + (0.984 + 0.005) * fvcAatsrNadir;
-            final double emAatsrNadir = 0.5 * (eAatsrNadirB1 + eAatsrNadirB2);
-            final double deAatsrNadir = eAatsrNadirB1 - eAatsrNadirB2;
+            final double eB1 = 0.970 * (1 - fvc) + (0.982 + 0.005) * fvc;
+            final double eB2 = 0.977 * (1 - fvc) + (0.984 + 0.005) * fvc;
+            final double em = 0.5 * (eB1 + eB2);
+            final double de = eB1 - eB2;
 
             final double btNadirDiff = bt2N - bt3N;
             final double bt1NadirFwardDiff = bt2N - bt2O;
@@ -167,15 +166,15 @@ public class LstMerisAatsrOp extends PixelOperator {
                     LstConstants.LST_SW_COEFFS[0] +
                     LstConstants.LST_SW_COEFFS[1] * btNadirDiff +
                     LstConstants.LST_SW_COEFFS[2] * btNadirDiff * btNadirDiff +
-                    (LstConstants.LST_SW_COEFFS[3] + LstConstants.LST_SW_COEFFS[4] * WATER_VAPOUR_CONTENT) * (1.0 - emAatsrNadir) +
-                    (LstConstants.LST_SW_COEFFS[5] + LstConstants.LST_SW_COEFFS[6] * WATER_VAPOUR_CONTENT) * deAatsrNadir;
+                    (LstConstants.LST_SW_COEFFS[3] + LstConstants.LST_SW_COEFFS[4] * WATER_VAPOUR_CONTENT) * (1.0 - em) +
+                    (LstConstants.LST_SW_COEFFS[5] + LstConstants.LST_SW_COEFFS[6] * WATER_VAPOUR_CONTENT) * de;
 
             final double lstDa = bt2N +
                     LstConstants.LST_DA_COEFFS[0] +
                     LstConstants.LST_DA_COEFFS[1] * bt1NadirFwardDiff +
                     LstConstants.LST_DA_COEFFS[2] * bt1NadirFwardDiff * bt1NadirFwardDiff +
-                    (LstConstants.LST_DA_COEFFS[3] + LstConstants.LST_DA_COEFFS[4] * WATER_VAPOUR_CONTENT) * (1.0 - emAatsrNadir) +
-                    (LstConstants.LST_DA_COEFFS[5] + LstConstants.LST_DA_COEFFS[6] * WATER_VAPOUR_CONTENT) * deAatsrNadir;
+                    (LstConstants.LST_DA_COEFFS[3] + LstConstants.LST_DA_COEFFS[4] * WATER_VAPOUR_CONTENT) * (1.0 - em) +
+                    (LstConstants.LST_DA_COEFFS[5] + LstConstants.LST_DA_COEFFS[6] * WATER_VAPOUR_CONTENT) * de;
 
             final double lstSwda = bt2N +
                     LstConstants.LST_SWDA_COEFFS[0] +
@@ -183,8 +182,8 @@ public class LstMerisAatsrOp extends PixelOperator {
                     LstConstants.LST_SWDA_COEFFS[2] * btNadirDiff * btNadirDiff +
                     LstConstants.LST_SWDA_COEFFS[3] * bt1NadirFwardDiff +
                     LstConstants.LST_SWDA_COEFFS[4] * bt1NadirFwardDiff * bt1NadirFwardDiff +
-                    (LstConstants.LST_SWDA_COEFFS[5] + LstConstants.LST_SWDA_COEFFS[6] * WATER_VAPOUR_CONTENT) * (1.0 - emAatsrNadir) +
-                    (LstConstants.LST_SWDA_COEFFS[7] + LstConstants.LST_SWDA_COEFFS[8] * WATER_VAPOUR_CONTENT) * deAatsrNadir;
+                    (LstConstants.LST_SWDA_COEFFS[5] + LstConstants.LST_SWDA_COEFFS[6] * WATER_VAPOUR_CONTENT) * (1.0 - em) +
+                    (LstConstants.LST_SWDA_COEFFS[7] + LstConstants.LST_SWDA_COEFFS[8] * WATER_VAPOUR_CONTENT) * de;
 
             int targetIndex = 0;
 

@@ -7,14 +7,14 @@ package org.esa.beam.sen4lst.synergy;
  */
 public class MerisAatsrConstants {
 
-    public static final int MERIS_BAND7_WVL = 665;
+    public static final int MERIS_BAND6_WVL = 620;
     public static final int MERIS_BAND10_WVL = 753;
 
     public static final int AATSR_BAND1_WVL = 555;
     public static final int AATSR_BAND2_WVL = 659;
 
-    public static final String MERIS_SDR_665_BANDNAME = "SynergySDR_665_MERIS";
-    public static final String MERIS_SDR_753_BANDNAME = "SynergySDR_665_MERIS";
+    public static final String MERIS_SDR_620_BANDNAME = "SynergySDR_620_MERIS";
+    public static final String MERIS_SDR_753_BANDNAME = "SynergySDR_753_MERIS";
 
     public static final String AATSR_NADIR_SDR_555_BANDNAME = "SynergySDR_nadir_555_AATSR";
     public static final String AATSR_NADIR_SDR_659_BANDNAME = "SynergySDR_nadir_659_AATSR";

@@ -76,7 +76,7 @@ public class LstMasterOp extends Operator {
 
     private void retrieveLstMerisAatsr() {
         // get minimum NDVIs:
-        final Band merisB7Band = merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_SDR_665_BANDNAME);
+        final Band merisB7Band = merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_SDR_620_BANDNAME);
         final Band merisB10Band = merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_SDR_753_BANDNAME);
         final double[] merisNdviMinMax = getNdviMinMax(merisB7Band, merisB10Band);
 

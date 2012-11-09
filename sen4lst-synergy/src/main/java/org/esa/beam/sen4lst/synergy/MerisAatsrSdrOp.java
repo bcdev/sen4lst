@@ -19,14 +19,10 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * todo: add comment
- * To change this template use File | Settings | File Templates.
- * Date: 06.11.12
- * Time: 16:29
+ * Operator for computation of MERIS/AATSR SDRs as needed for LST retrieval
  *
  * @author olafd
  */
@@ -337,7 +333,7 @@ public class MerisAatsrSdrOp extends Operator {
 
         for (int iWL = 0; iWL < merisWvl.length; iWL++) {
             final int thisWvl = Math.round(merisWvl[iWL]);
-            if (thisWvl == MerisAatsrConstants.MERIS_BAND7_WVL || thisWvl == MerisAatsrConstants.MERIS_BAND10_WVL) {
+            if (thisWvl == MerisAatsrConstants.MERIS_BAND6_WVL || thisWvl == MerisAatsrConstants.MERIS_BAND10_WVL) {
                 final String wvlSubstring = String.format("_%d", thisWvl);
                 sdrMerisBandNames[iWL] = SynergyConstants.OUTPUT_SDR_BAND_NAME + wvlSubstring + "_MERIS";
                 targetBand = new Band(sdrMerisBandNames[iWL], ProductData.TYPE_FLOAT32, rasterWidth, rasterHeight);
