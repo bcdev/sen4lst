@@ -80,17 +80,13 @@ public class MerisAatsrSynergyOp extends Operator {
         cloudScreeningParams.put("computeSH", false);
         cloudScreeningProduct = GPF.createProduct(OperatorSpi.getOperatorAlias(SynergyCloudScreeningOp.class),
                                                   cloudScreeningParams, cloudScreeningInput);
-        targetProduct = cloudScreeningProduct;
 
-        // get the aerosol / atmospheric correction product...
-        Product surfaceReflectanceProduct;
-        Map<String, Product> landOceanInput = new HashMap<String, Product>(1);
-        landOceanInput.put("source", cloudScreeningProduct);
-        Map<String, Object> landOceanParams = new HashMap<String, Object>();
+        // get the SDR product...
+        MerisAatsrSdrOp sdrOp = new MerisAatsrSdrOp();
+        sdrOp.setSourceProduct("source", cloudScreeningProduct);
+        final Product surfaceReflectanceProduct = sdrOp.getTargetProduct();
 
-        surfaceReflectanceProduct = GPF.createProduct(OperatorSpi.getOperatorAlias(MerisAatsrSdrOp.class),
-                                                      landOceanParams, landOceanInput);
-        targetProduct = surfaceReflectanceProduct;
+        setTargetProduct(surfaceReflectanceProduct);
     }
 
     /**

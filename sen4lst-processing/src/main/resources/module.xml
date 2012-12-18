@@ -18,8 +18,12 @@
 
     <changelog>
         <![CDATA[
-        ]]>
+                ]]>
     </changelog>
+
+    <dependency>
+        <module>sen4lst-synergy</module>
+    </dependency>
 
     <!-- BEAM Basics -->
 
@@ -27,13 +31,7 @@
         <module>beam-gpf</module>
     </dependency>
     <dependency>
-        <module>beam-envisat-reader</module>
-    </dependency>
-    <dependency>
-        <module>beam-netcdf</module>
-    </dependency>
-    <dependency>
-        <module>beam-visat</module>
+        <module>beam-visat-rcp</module>
         <optional>true</optional>
     </dependency>
 
@@ -43,16 +41,41 @@
 
     <extension point="beam-ui:actions">
         <action>
-            <id>sen4lstColourProcessing</id>
+            <id>sen4lst</id>
+            <class>org.esa.beam.visat.actions.ActionGroup</class>
+            <text>Sen4LST Land Surface Temperature Retrieval...</text>
+            <shortDescr>
+                Sen4LST Land Surface Temperature Retrieval.
+            </shortDescr>
+            <mnemonic/>
+            <parent>tools</parent>
+            <helpID>sen4lstMaster</helpID>
+            <placeAfter/>
+        </action>
+        <action>
+            <id>sen4lstMerisAatsrSynergyProcessing</id>
             <class>org.esa.beam.visat.actions.DefaultOperatorAction</class>
-            <operatorName>Sen4LST.Processor</operatorName>
-            <text>Sen4LST Processor...</text>
-            <dialogTitle>Sen4LST Processor</dialogTitle>
+            <operatorName>Sen4LST.Sdr</operatorName>
+            <text>SDR Synergy Processor...</text>
+            <dialogTitle>Sen4LST SDR Synergy Processor</dialogTitle>
+            <targetProductNameSuffix>_syn</targetProductNameSuffix>
+            <shortDescr></shortDescr>
+            <longDescr></longDescr>
+            <mnemonic/>
+            <parent>sen4lst</parent>
+            <helpID></helpID>
+        </action>
+        <action>
+            <id>sen4lstLstProcessing</id>
+            <class>org.esa.beam.visat.actions.DefaultOperatorAction</class>
+            <operatorName>Sen4LST.Lst</operatorName>
+            <text>LST Processor...</text>
+            <dialogTitle>Sen4LST LST Processor</dialogTitle>
             <targetProductNameSuffix>_lst</targetProductNameSuffix>
             <shortDescr></shortDescr>
             <longDescr></longDescr>
             <mnemonic/>
-            <parent>tools</parent>
+            <parent>sen4lst</parent>
             <helpID></helpID>
         </action>
     </extension>

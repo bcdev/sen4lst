@@ -32,38 +32,42 @@ import java.io.IOException;
                   description = "Sen4LST master operator for LST retrievals.")
 public class LstMasterOp extends Operator {
 
-    @SourceProduct(alias = "MERIS_AATSR",
+    @SourceProduct(alias = "MERIS/AATSR (real) or OLCI/SLSTR (simulated)",
                    optional = true,
-                   description = "MERIS/AATSR SDR source product.")
-    Product merisAatsrProduct;
+                   description = "MERIS/AATSR (real) or OLCI/SLSTR (simulated) SDR source product.")
+    Product lstRetrievalInputProduct;
 
-    @Parameter(defaultValue = "", description = "Sen4LST data directory") // e.g., /data/sen4lst/input
-    private String lstSimulationDataDir;
+    @Parameter(defaultValue = "false", description = "Set to true if simulation data (OLCI/SLSTR) is used")
+    private boolean processSimulationData;
 
-    @Parameter(defaultValue = "false", description = "Set to true if simulation data is used")
-    private boolean simulation;
+    @Parameter(defaultValue = "/data/sen4lst/input", description = "OLCI/SLSTR simulation data directory")
+    // e.g., /data/sen4lst/input
+    private File lstSimulationDataDir;
 
-    @Parameter(defaultValue = "false", description = "Set to true if old simulation data is used")
-    private boolean oldSimulationData;
-
-    @Parameter(defaultValue = "", description = "Timestamp in Modtran simulation data filename, e.g. '090620_0943Z'")
-    private String timestampModtran;
-
-    @Parameter(defaultValue = "1",
-               interval = "[1,5]",
-               description = "ID of file extension (_z1,.., _z5) to be used for Geolocated LST retrieval")
-    private int geolocatedFileId;
+    @Parameter(defaultValue = "000000_0000Z", description = "Timestamp in 'new' (Modtran) OLCI/SLSTR simulation data filename, as 'yyMMdd_hhmmZ'")
+    private String modtranSimulationDataFileTimestamp;
 
     @Parameter(defaultValue = "1",
                interval = "[1,66]",
-               description = "ID of standard atmosphere to be used for Modtran LST retrieval")
-    private int atmosphereId;
+               description = "ID of standard atmosphere to be used for LST retrieval from 'new' (Modtran) OLCI/SLSTR simulation data (must be in [1,66])")
+    private int modtranAtmosphereId;
 
+    @Parameter(defaultValue = "false", description = "Set to true if 'old' (Geolocated) OLCI/SLSTR simulation data is used")
+    private boolean useOldSimulationData;
+
+    @Parameter(defaultValue = "1",
+               interval = "[1,5]",
+               description = "ID of file extension (_z1,.., _z5) to be used for LST retrieval from 'old' Geolocated OLCI/SLSTR simulation data")
+    private int geolocatedSimulationDataFileId;
+
+    String lstSimulationDataPath;
 
     @Override
     public void initialize() throws OperatorException {
-        if (simulation) {
-            if (oldSimulationData) {
+        lstSimulationDataPath = lstSimulationDataDir.getAbsolutePath();
+
+        if (processSimulationData) {
+            if (useOldSimulationData) {
                 retrieveLstGeolocated();
             } else {
                 retrieveLstModtran();
@@ -76,23 +80,23 @@ public class LstMasterOp extends Operator {
 
     private void retrieveLstMerisAatsr() {
         // get minimum NDVIs:
-        final Band merisB7Band = merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_SDR_620_BANDNAME);
-        final Band merisB10Band = merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_SDR_753_BANDNAME);
+        final Band merisB7Band = lstRetrievalInputProduct.getBand(MerisAatsrConstants.MERIS_SDR_620_BANDNAME);
+        final Band merisB10Band = lstRetrievalInputProduct.getBand(MerisAatsrConstants.MERIS_SDR_753_BANDNAME);
         final double[] merisNdviMinMax = getNdviMinMax(merisB7Band, merisB10Band);
 
-        final Band aatsrNadirSdrB1Band = merisAatsrProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_555_BANDNAME);
-        final Band aatsrNadirSdrB2Band = merisAatsrProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_659_BANDNAME);
+        final Band aatsrNadirSdrB1Band = lstRetrievalInputProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_555_BANDNAME);
+        final Band aatsrNadirSdrB2Band = lstRetrievalInputProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_659_BANDNAME);
         final double[] aatsrNadirNdviMinMax = getNdviMinMax(aatsrNadirSdrB1Band, aatsrNadirSdrB2Band);
 
         LstMerisAatsrOp lstOp = new LstMerisAatsrOp();
-        lstOp.setSourceProduct("merisAatsrProduct", merisAatsrProduct);
+        lstOp.setSourceProduct("merisAatsrProduct", lstRetrievalInputProduct);
         lstOp.setParameter("merisNdviMinMax", merisNdviMinMax);
         lstOp.setParameter("aatsrNadirNdviMinMax", aatsrNadirNdviMinMax);
 
         final Product lstProduct = lstOp.getTargetProduct();
-        ProductUtils.copyFlagBands(merisAatsrProduct, lstProduct, true);
-        ProductUtils.copyFlagCodings(merisAatsrProduct, lstProduct);
-        ProductUtils.copyMasks(merisAatsrProduct, lstProduct);
+        ProductUtils.copyFlagBands(lstRetrievalInputProduct, lstProduct, true);
+        ProductUtils.copyFlagCodings(lstRetrievalInputProduct, lstProduct);
+        ProductUtils.copyMasks(lstRetrievalInputProduct, lstProduct);
 
         setTargetProduct(lstProduct);
     }
@@ -155,7 +159,7 @@ public class LstMasterOp extends Operator {
             if (inputProduct != null) {
                 LstModtranOp lstOp = new LstModtranOp();
                 lstOp.setSourceProduct("source", inputProduct);
-                final double waterVapourContent = StandardAtmosphere.getInstance().getAtmosphereWaterVapour(atmosphereId - 1);  // zero based
+                final double waterVapourContent = StandardAtmosphere.getInstance().getAtmosphereWaterVapour(modtranAtmosphereId - 1);  // zero based
                 lstOp.setParameter("waterVapourContent", waterVapourContent);
                 setTargetProduct(lstOp.getTargetProduct());
                 ProductUtils.copyGeoCoding(inputProduct, getTargetProduct());
@@ -170,33 +174,33 @@ public class LstMasterOp extends Operator {
     private Product getGeolocatedInputProduct(String productIdentifier) throws IOException {
         // OLCI_300m_z1, SLSTRn_500m_z1, SLSTRn_1km_z1, SLSTRo_500m_z1, SLSTRo_1km_z1
 
-        final String geolocatedFileSuffix = "_z" + String.format("%01d", atmosphereId) + ".hdr";
-        final String[] geolocatedFileNames = (new File(lstSimulationDataDir)).list();
+        final String geolocatedFileSuffix = "_z" + String.format("%01d", modtranAtmosphereId) + ".hdr";
+        final String[] geolocatedFileNames = lstSimulationDataDir.list();
 
         for (String geolocatedFileName : geolocatedFileNames) {
             final String matchingFilename = productIdentifier.toLowerCase() + geolocatedFileSuffix;
             if (geolocatedFileName.toLowerCase().equals(matchingFilename)) {
-                String geolocatedProductFileName = lstSimulationDataDir + File.separator + geolocatedFileName;
+                String geolocatedProductFileName = lstSimulationDataPath + File.separator + geolocatedFileName;
                 return ProductIO.readProduct(geolocatedProductFileName);
             }
         }
-        throw new OperatorException("No Geolocated simulation input product found in '" + lstSimulationDataDir + "'.");
+        throw new OperatorException("No Geolocated simulation input product found in '" + lstSimulationDataPath + "'.");
     }
 
     private Product getModtranInputProduct() throws IOException {
         // SEN4LST_TOA_090620_0943Z_ATM01.HDR
 
-        final String modtranFileSuffix = "_ATM" + String.format("%02d", atmosphereId) + ".HDR";
-        final String[] modtranFileNames = (new File(lstSimulationDataDir)).list();
+        final String modtranFileSuffix = "_ATM" + String.format("%02d", modtranAtmosphereId) + ".HDR";
+        final String[] modtranFileNames = lstSimulationDataDir.list();
 
         for (String modtranFileName : modtranFileNames) {
-            final String matchingFilename = LstConstants.MODTRAN_FILENAME_PREFIX + timestampModtran + modtranFileSuffix;
+            final String matchingFilename = LstConstants.MODTRAN_FILENAME_PREFIX + modtranSimulationDataFileTimestamp + modtranFileSuffix;
             if (modtranFileName.toUpperCase().equals(matchingFilename)) {
-                String modtranProductFileName = lstSimulationDataDir + File.separator + modtranFileName.toUpperCase();
+                String modtranProductFileName = lstSimulationDataPath + File.separator + modtranFileName.toUpperCase();
                 return ProductIO.readProduct(modtranProductFileName);
             }
         }
-        throw new OperatorException("No Modtran simulation input product found in '" + lstSimulationDataDir + "'.");
+        throw new OperatorException("No Modtran simulation input product found in '" + lstSimulationDataPath + "'.");
     }
 
     private static Product getScaledProduct(Product sourceProduct) {

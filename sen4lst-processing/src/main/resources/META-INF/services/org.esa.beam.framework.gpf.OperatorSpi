@@ -2,3 +2,4 @@ org.esa.beam.sen4lst.processing.LstMasterOp$Spi
 org.esa.beam.sen4lst.processing.LstModtranOp$Spi
 org.esa.beam.sen4lst.processing.LstGeolocatedOp$Spi
 org.esa.beam.sen4lst.processing.LstMerisAatsrOp$Spi
+org.esa.beam.sen4lst.processing.SdrMasterOp$Spi

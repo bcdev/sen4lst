@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * @author olafd
  */
-@OperatorMetadata(alias = "sen4lst.synergy.merisaatsr.sdr",
+@OperatorMetadata(alias = "sen4lst.merisaatsr.sdr",
                   version = "1.1",
                   authors = "Olaf Danne",
                   copyright = "(c) 2009 by Brockmann Consult",

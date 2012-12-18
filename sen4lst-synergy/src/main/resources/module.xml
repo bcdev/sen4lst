@@ -1,6 +1,6 @@
 <module>
     <manifestVersion>1.0.0</manifestVersion>
-    <symbolicName>sen4lst-processing</symbolicName>
+    <symbolicName>sen4lst-synergy</symbolicName>
     <version>1.0</version>
     <name>BEAM Sen4LST Synergy</name>
 
@@ -27,17 +27,15 @@
         <module>beam-gpf</module>
     </dependency>
     <dependency>
-        <module>beam-envisat-reader</module>
-    </dependency>
-    <dependency>
-        <module>beam-netcdf</module>
-    </dependency>
-    <dependency>
-        <module>beam-visat</module>
+        <module>beam-visat-rcp</module>
         <optional>true</optional>
     </dependency>
+
     <dependency>
         <module>beam-meris-aatsr-synergy-preprocessing</module>
+    </dependency>
+    <dependency>
+        <module>beam-meris-aatsr-synergy-core</module>
     </dependency>
 
     <!-- Other Operators -->
@@ -47,16 +45,16 @@
     <!--todo: check if needed-->
     <!--<extension point="beam-ui:actions">-->
         <!--<action>-->
-            <!--<id>sen4lstColourProcessing</id>-->
+            <!--<id>sen4lstMerisAatsrSynergyProcessing</id>-->
             <!--<class>org.esa.beam.visat.actions.DefaultOperatorAction</class>-->
-            <!--<operatorName>Sen4LST.Processor</operatorName>-->
-            <!--<text>Sen4LST Processor...</text>-->
-            <!--<dialogTitle>Sen4LST Processor</dialogTitle>-->
-            <!--<targetProductNameSuffix>_lst</targetProductNameSuffix>-->
+            <!--<operatorName>Sen4LST.synergy.merisaatsr</operatorName>-->
+            <!--<text>Sen4LST MERIS/AATSR Synergy Processor...</text>-->
+            <!--<dialogTitle>Sen4LST MERIS/AATSR Synergy Processor</dialogTitle>-->
+            <!--<targetProductNameSuffix>_syn</targetProductNameSuffix>-->
             <!--<shortDescr></shortDescr>-->
             <!--<longDescr></longDescr>-->
             <!--<mnemonic/>-->
-            <!--<parent>tools</parent>-->
+            <!--<parent>sen4lst</parent>-->
             <!--<helpID></helpID>-->
         <!--</action>-->
     <!--</extension>-->

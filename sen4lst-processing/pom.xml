@@ -8,6 +8,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
 
     <artifactId>sen4lst-processing</artifactId>
     <name>Sen4LST Processing</name>
@@ -24,7 +25,7 @@
         <dependency>
             <groupId>org.esa.beam.sen4lst</groupId>
             <artifactId>sen4lst-synergy</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${pom.version}</version>
         </dependency>
     </dependencies>
 

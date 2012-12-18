@@ -1,8 +1,8 @@
 <module>
     <manifestVersion>1.0.0</manifestVersion>
-    <symbolicName>sen4lst-processing</symbolicName>
+    <symbolicName>sen4lst-util</symbolicName>
     <version>1.0</version>
-    <name>BEAM Sen4LST Processing</name>
+    <name>BEAM Sen4LST Utilities</name>
 
     <description>
         <![CDATA[
@@ -27,35 +27,29 @@
         <module>beam-gpf</module>
     </dependency>
     <dependency>
-        <module>beam-envisat-reader</module>
-    </dependency>
-    <dependency>
-        <module>beam-netcdf</module>
-    </dependency>
-    <dependency>
-        <module>beam-visat</module>
+        <module>beam-visat-rcp</module>
         <optional>true</optional>
     </dependency>
 
     <!-- Other Operators -->
 
-    <categories>Processor,MERIS</categories>
+    <!--<categories>Processor,MERIS</categories>-->
 
-    <extension point="beam-ui:actions">
-        <action>
-            <id>sen4lstColourProcessing</id>
-            <class>org.esa.beam.visat.actions.DefaultOperatorAction</class>
-            <operatorName>Sen4LST.Processor</operatorName>
-            <text>Sen4LST Processor...</text>
-            <dialogTitle>Sen4LST Processor</dialogTitle>
-            <targetProductNameSuffix>_lst</targetProductNameSuffix>
-            <shortDescr></shortDescr>
-            <longDescr></longDescr>
-            <mnemonic/>
-            <parent>tools</parent>
-            <helpID></helpID>
-        </action>
-    </extension>
+    <!--<extension point="beam-ui:actions">-->
+        <!--<action>-->
+            <!--<id>sen4lstColourProcessing</id>-->
+            <!--<class>org.esa.beam.visat.actions.DefaultOperatorAction</class>-->
+            <!--<operatorName>Sen4LST.Processor</operatorName>-->
+            <!--<text>Sen4LST Processor...</text>-->
+            <!--<dialogTitle>Sen4LST Processor</dialogTitle>-->
+            <!--<targetProductNameSuffix>_lst</targetProductNameSuffix>-->
+            <!--<shortDescr></shortDescr>-->
+            <!--<longDescr></longDescr>-->
+            <!--<mnemonic/>-->
+            <!--<parent>tools</parent>-->
+            <!--<helpID></helpID>-->
+        <!--</action>-->
+    <!--</extension>-->
 
     <!--<extension point="beam-ui:helpSets">-->
     <!--<helpSet>-->

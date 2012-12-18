@@ -78,8 +78,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <ceresVersion>0.13.1</ceresVersion>
-        <beamVersion>4.10.3</beamVersion>
+        <ceresVersion>0.14-SNAPSHOT</ceresVersion>
+        <beamVersion>4.10.4-SNAPSHOT</beamVersion>
     </properties>
 
     <dependencyManagement>
@@ -170,6 +170,12 @@
             <dependency>
                 <groupId>org.esa.beam.synergy</groupId>
                 <artifactId>beam-meris-aatsr-synergy-preprocessing</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.esa.beam.synergy</groupId>
+                <artifactId>beam-meris-aatsr-synergy-core</artifactId>
                 <version>1.2.3</version>
             </dependency>
 
