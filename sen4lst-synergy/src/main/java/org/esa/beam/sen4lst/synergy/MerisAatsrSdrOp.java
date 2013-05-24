@@ -42,9 +42,8 @@ public class MerisAatsrSdrOp extends Operator {
     @TargetProduct(description = "The target product.")
     private Product targetProduct;
 
-    private String auxdataPath = SynergyConstants.SYNERGY_AUXDATA_HOME_DEFAULT + File.separator +
-            "aerosolLUTs" + File.separator + "land";
-
+    private String auxdataRoot;
+    private String auxdataPath;
 
     private ArrayList<Band> merisBandList;
     private ArrayList<Band> aatsrBandListNad;
@@ -56,14 +55,14 @@ public class MerisAatsrSdrOp extends Operator {
     private float[] soilSurfSpec;
     private float[] vegSurfSpec;
     private float[] merisBandWidth;
+
     private float[] aatsrBandWidth;
-
     private String[] sdrMerisBandNames;
+
     private String[][] sdrAatsrBandNames;
-
     private int rasterWidth;
-    private int rasterHeight;
 
+    private int rasterHeight;
     private Band validBand;
     private Product landUpscaledProduct;
 
@@ -72,6 +71,16 @@ public class MerisAatsrSdrOp extends Operator {
     public void initialize() throws OperatorException {
 
         final int aveBlock = 7;
+
+        if (new File(SynergyConstants.SYNERGY_AUXDATA_HOME_DEFAULT).exists()) {
+            auxdataRoot = SynergyConstants.SYNERGY_AUXDATA_HOME_DEFAULT;
+        } else {
+            // try this one (in case of calvalus processing)
+            auxdataRoot = SynergyConstants.SYNERGY_AUXDATA_CALVALUS_DEFAULT;
+        }
+        auxdataPath = auxdataRoot + File.separator + "aerosolLUTs" + File.separator + "land";
+
+        System.out.println("auxdataPath = " + auxdataPath);
 
         // get the aerosol land product..
         Product landProduct;
@@ -135,8 +144,16 @@ public class MerisAatsrSdrOp extends Operator {
         readWavelengthBandw(merisBandList, merisWvl, merisBandWidth);
         readWavelengthBandw(aatsrBandListNad, aatsrWvl, aatsrBandWidth);
 
-        soilSurfSpec = new SurfaceSpec(SynergyConstants.SOIL_SPEC_PARAM_DEFAULT, merisWvl).getSpec();
-        vegSurfSpec = new SurfaceSpec(SynergyConstants.VEG_SPEC_PARAM_DEFAULT, merisWvl).getSpec();
+        if (soilSurfSpec == null) {
+            String soilSpecName = auxdataRoot + File.separator + SynergyConstants.SOIL_SPEC_PARAM_DEFAULT;
+            System.out.printf("   soilSpecName: %s\n", soilSpecName);
+            soilSurfSpec = new SurfaceSpec(soilSpecName, merisWvl).getSpec();
+        }
+        if (vegSurfSpec == null) {
+            String vegSpecName = auxdataRoot + File.separator + SynergyConstants.VEG_SPEC_PARAM_DEFAULT;
+            System.out.printf("   vegSpecName: %s\n", vegSpecName);
+            vegSurfSpec = new SurfaceSpec(vegSpecName, merisWvl).getSpec();
+        }
 
         final String validFlagExpression = "( l1_flags_MERIS.LAND_OCEAN && " +
                 "!(cloud_flags_synergy.CLOUD || cloud_flags_synergy.CLOUD_FILLED))";

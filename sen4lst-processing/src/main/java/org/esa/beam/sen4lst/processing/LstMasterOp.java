@@ -32,10 +32,10 @@ import java.io.IOException;
                   description = "Sen4LST master operator for LST retrievals.")
 public class LstMasterOp extends Operator {
 
-    @SourceProduct(alias = "MERIS/AATSR (real) or OLCI/SLSTR (simulated)",
+    @SourceProduct(alias = "sdrSource",
                    optional = true,
                    description = "MERIS/AATSR (real) or OLCI/SLSTR (simulated) SDR source product.")
-    Product lstRetrievalInputProduct;
+    Product sourceProduct;
 
     @Parameter(defaultValue = "false", description = "Set to true if simulation data (OLCI/SLSTR) is used")
     private boolean processSimulationData;
@@ -80,23 +80,23 @@ public class LstMasterOp extends Operator {
 
     private void retrieveLstMerisAatsr() {
         // get minimum NDVIs:
-        final Band merisB7Band = lstRetrievalInputProduct.getBand(MerisAatsrConstants.MERIS_SDR_620_BANDNAME);
-        final Band merisB10Band = lstRetrievalInputProduct.getBand(MerisAatsrConstants.MERIS_SDR_753_BANDNAME);
+        final Band merisB7Band = sourceProduct.getBand(MerisAatsrConstants.MERIS_SDR_620_BANDNAME);
+        final Band merisB10Band = sourceProduct.getBand(MerisAatsrConstants.MERIS_SDR_753_BANDNAME);
         final double[] merisNdviMinMax = getNdviMinMax(merisB7Band, merisB10Band);
 
-        final Band aatsrNadirSdrB1Band = lstRetrievalInputProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_555_BANDNAME);
-        final Band aatsrNadirSdrB2Band = lstRetrievalInputProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_659_BANDNAME);
+        final Band aatsrNadirSdrB1Band = sourceProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_555_BANDNAME);
+        final Band aatsrNadirSdrB2Band = sourceProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_659_BANDNAME);
         final double[] aatsrNadirNdviMinMax = getNdviMinMax(aatsrNadirSdrB1Band, aatsrNadirSdrB2Band);
 
         LstMerisAatsrOp lstOp = new LstMerisAatsrOp();
-        lstOp.setSourceProduct("merisAatsrProduct", lstRetrievalInputProduct);
+        lstOp.setSourceProduct("merisAatsrProduct", sourceProduct);
         lstOp.setParameter("merisNdviMinMax", merisNdviMinMax);
         lstOp.setParameter("aatsrNadirNdviMinMax", aatsrNadirNdviMinMax);
 
         final Product lstProduct = lstOp.getTargetProduct();
-        ProductUtils.copyFlagBands(lstRetrievalInputProduct, lstProduct, true);
-        ProductUtils.copyFlagCodings(lstRetrievalInputProduct, lstProduct);
-        ProductUtils.copyMasks(lstRetrievalInputProduct, lstProduct);
+        ProductUtils.copyFlagBands(sourceProduct, lstProduct, true);
+        ProductUtils.copyFlagCodings(sourceProduct, lstProduct);
+        ProductUtils.copyMasks(sourceProduct, lstProduct);
 
         setTargetProduct(lstProduct);
     }
