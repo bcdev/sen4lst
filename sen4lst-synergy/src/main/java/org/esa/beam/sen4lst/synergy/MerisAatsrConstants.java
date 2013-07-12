@@ -32,4 +32,6 @@ public class MerisAatsrConstants {
     public static final String AATSR_NADIR_CONFID_FLAGS_BANDNAME = "confid_flags_nadir_AATSR";
     public static final String AATSR_FWARD_CONFID_FLAGS_BANDNAME = "confid_flags_fward_AATSR";
     public static final String SYNERGY_CLOUD_FLAGS_BANDNAME = "cloud_flags_synergy";
+
+    public static final String MERIS_L2_WATER_VAPOUR_BAND_NAME = "water_vapour_L2";
 }

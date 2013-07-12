@@ -59,8 +59,11 @@ public class LstMerisAatsrOp extends PixelOperator {
     private static final int SRC_AATSR_NADIR_CONFID_FLAGS = 12;
     private static final int SRC_AATSR_FWARD_CONFID_FLAGS = 13;
 
+    private static final int SRC_MERIS_L2_WATER_VAPOUR = 14;
+
     private int landOceanFlagBit;
     private int synergyCloudFlagBit;
+
 
     @Override
     protected void configureTargetProduct(ProductConfigurer productConfigurer) throws OperatorException {
@@ -99,6 +102,10 @@ public class LstMerisAatsrOp extends PixelOperator {
         sampleConfigurer.defineSample(SRC_AATSR_NADIR_CONFID_FLAGS, MerisAatsrConstants.AATSR_NADIR_CONFID_FLAGS_BANDNAME, merisAatsrProduct);
         sampleConfigurer.defineSample(SRC_AATSR_FWARD_CONFID_FLAGS, MerisAatsrConstants.AATSR_FWARD_CONFID_FLAGS_BANDNAME, merisAatsrProduct);
 
+        if (merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME) != null) {
+            sampleConfigurer.defineSample(SRC_MERIS_L2_WATER_VAPOUR, MerisAatsrConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME, merisAatsrProduct);
+        }
+
         final FlagCoding merisL1FlagCoding = merisAatsrProduct.getFlagCodingGroup().get(MerisAatsrConstants.MERIS_L1_FLAGS_BANDNAME);
         final int landOcealFlagVal = merisL1FlagCoding.getAttribute("LAND_OCEAN").getData().getElemInt();
         landOceanFlagBit = (int) (Math.log(landOcealFlagVal) / Math.log(2));
@@ -124,10 +131,19 @@ public class LstMerisAatsrOp extends PixelOperator {
         final boolean isCloud = (synergyCloudFlags & (1 << synergyCloudFlagBit)) != 0;
 
         if (isAllInputsValid(sourceSamples) && !isCloud) {
+            // optional for MERIS NDVI:
             final double merisb7 = sourceSamples[SRC_MERIS_7].getDouble();
             final double merisb10 = sourceSamples[SRC_MERIS_10].getDouble();
 
-
+            double waterVapourContent;
+            if (merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME) != null) {
+                waterVapourContent = sourceSamples[SRC_MERIS_L2_WATER_VAPOUR].getDouble();
+                if (waterVapourContent < 0.0) {
+                    waterVapourContent = WATER_VAPOUR_CONTENT;
+                }
+            } else {
+                waterVapourContent = WATER_VAPOUR_CONTENT;
+            }
 
             final double aatsrNadirBt2 = sourceSamples[SRC_AATSR_NADIR_BT_2].getDouble();
             final double aatsrNadirBt3 = sourceSamples[SRC_AATSR_NADIR_BT_3].getDouble();
@@ -166,15 +182,15 @@ public class LstMerisAatsrOp extends PixelOperator {
                     LstConstants.LST_SW_COEFFS[0] +
                     LstConstants.LST_SW_COEFFS[1] * btNadirDiff +
                     LstConstants.LST_SW_COEFFS[2] * btNadirDiff * btNadirDiff +
-                    (LstConstants.LST_SW_COEFFS[3] + LstConstants.LST_SW_COEFFS[4] * WATER_VAPOUR_CONTENT) * (1.0 - em) +
-                    (LstConstants.LST_SW_COEFFS[5] + LstConstants.LST_SW_COEFFS[6] * WATER_VAPOUR_CONTENT) * de;
+                    (LstConstants.LST_SW_COEFFS[3] + LstConstants.LST_SW_COEFFS[4] * waterVapourContent) * (1.0 - em) +
+                    (LstConstants.LST_SW_COEFFS[5] + LstConstants.LST_SW_COEFFS[6] * waterVapourContent) * de;
 
             final double lstDa = bt2N +
                     LstConstants.LST_DA_COEFFS[0] +
                     LstConstants.LST_DA_COEFFS[1] * bt1NadirFwardDiff +
                     LstConstants.LST_DA_COEFFS[2] * bt1NadirFwardDiff * bt1NadirFwardDiff +
-                    (LstConstants.LST_DA_COEFFS[3] + LstConstants.LST_DA_COEFFS[4] * WATER_VAPOUR_CONTENT) * (1.0 - em) +
-                    (LstConstants.LST_DA_COEFFS[5] + LstConstants.LST_DA_COEFFS[6] * WATER_VAPOUR_CONTENT) * de;
+                    (LstConstants.LST_DA_COEFFS[3] + LstConstants.LST_DA_COEFFS[4] * waterVapourContent) * (1.0 - em) +
+                    (LstConstants.LST_DA_COEFFS[5] + LstConstants.LST_DA_COEFFS[6] * waterVapourContent) * de;
 
             final double lstSwda = bt2N +
                     LstConstants.LST_SWDA_COEFFS[0] +
@@ -182,8 +198,8 @@ public class LstMerisAatsrOp extends PixelOperator {
                     LstConstants.LST_SWDA_COEFFS[2] * btNadirDiff * btNadirDiff +
                     LstConstants.LST_SWDA_COEFFS[3] * bt1NadirFwardDiff +
                     LstConstants.LST_SWDA_COEFFS[4] * bt1NadirFwardDiff * bt1NadirFwardDiff +
-                    (LstConstants.LST_SWDA_COEFFS[5] + LstConstants.LST_SWDA_COEFFS[6] * WATER_VAPOUR_CONTENT) * (1.0 - em) +
-                    (LstConstants.LST_SWDA_COEFFS[7] + LstConstants.LST_SWDA_COEFFS[8] * WATER_VAPOUR_CONTENT) * de;
+                    (LstConstants.LST_SWDA_COEFFS[5] + LstConstants.LST_SWDA_COEFFS[6] * waterVapourContent) * (1.0 - em) +
+                    (LstConstants.LST_SWDA_COEFFS[7] + LstConstants.LST_SWDA_COEFFS[8] * waterVapourContent) * de;
 
             int targetIndex = 0;
 

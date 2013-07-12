@@ -54,6 +54,11 @@ public class MerisAatsrSynergyOp extends Operator {
 
 
         SynergyUtils.validateMerisProduct(merisSourceProduct);
+        if (merisSourceProduct.getProductType().equalsIgnoreCase("COLLOCATED")) {
+            // L1 was collocated with L2 product to get water vapour info
+            merisSourceProduct.setProductType("MER_RR__1P"); // just in case
+            merisSourceProduct.setDescription("MERIS L1/L2 collocated product."); // just in case
+        }
         SynergyUtils.validateAatsrProduct(aatsrSourceProduct);
 
         if (!SynergyUtils.validateAuxdata(false, SynergyConstants.AEROSOL_MODEL_PARAM_DEFAULT)) {

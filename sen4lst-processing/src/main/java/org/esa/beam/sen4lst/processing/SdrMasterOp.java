@@ -9,7 +9,9 @@ import org.esa.beam.framework.gpf.annotations.Parameter;
 import org.esa.beam.framework.gpf.annotations.SourceProduct;
 import org.esa.beam.framework.gpf.annotations.TargetProduct;
 import org.esa.beam.sen4lst.synergy.InstrumentCombination;
+import org.esa.beam.sen4lst.synergy.MerisAatsrConstants;
 import org.esa.beam.sen4lst.synergy.MerisAatsrSynergyOp;
+import org.esa.beam.util.ProductUtils;
 
 /**
  * Sen4LST master operator for LST retrievals
@@ -27,7 +29,6 @@ public class SdrMasterOp extends Operator {
     @SourceProduct(alias = "Master",
                    description = "'Master' instrument source product.")
     Product firstSourceProduct;
-
     @SourceProduct(alias = "Slave",
                    description = "'Slave' instrument source product.")
     Product secondSourceProduct;
@@ -47,6 +48,11 @@ public class SdrMasterOp extends Operator {
             synergyOp.setSourceProduct("AATSR", secondSourceProduct);
             final Product synergyProduct = synergyOp.getTargetProduct();
             setTargetProduct(synergyProduct);
+            // copy water vapour band if available in source product (merge from L2):
+            if (firstSourceProduct.getBand(MerisAatsrConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME) != null) {
+                ProductUtils.copyBand(MerisAatsrConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME,
+                                      firstSourceProduct, getTargetProduct(), true);
+            }
         } else if (instruments == InstrumentCombination.OLCI_SLSTR) {
             // not yet implemented
             throw new IllegalArgumentException("Instrument combination " + instruments.getLabel() + " not yet implemented.");
