@@ -9,7 +9,7 @@ import org.esa.beam.framework.gpf.OperatorSpi;
 import org.esa.beam.framework.gpf.annotations.OperatorMetadata;
 import org.esa.beam.framework.gpf.annotations.Parameter;
 import org.esa.beam.framework.gpf.annotations.SourceProduct;
-import org.esa.beam.sen4lst.synergy.MerisAatsrConstants;
+import org.esa.beam.sen4lst.synergy.SynergyConstants;
 import org.esa.beam.util.ProductUtils;
 
 import javax.media.jai.*;
@@ -32,7 +32,7 @@ import java.io.IOException;
                   description = "Sen4LST master operator for LST retrievals.")
 public class LstMasterOp extends Operator {
 
-    @SourceProduct(alias = "sdrSource",
+    @SourceProduct(alias = "Synergy Processing Result",
                    optional = true,
                    description = "MERIS/AATSR (real) or OLCI/SLSTR (simulated) SDR source product.")
     Product sourceProduct;
@@ -80,12 +80,12 @@ public class LstMasterOp extends Operator {
 
     private void retrieveLstMerisAatsr() {
         // get minimum NDVIs:
-        final Band merisB7Band = sourceProduct.getBand(MerisAatsrConstants.MERIS_SDR_620_BANDNAME);
-        final Band merisB10Band = sourceProduct.getBand(MerisAatsrConstants.MERIS_SDR_753_BANDNAME);
+        final Band merisB7Band = sourceProduct.getBand(SynergyConstants.MERIS_SDR_620_BANDNAME);
+        final Band merisB10Band = sourceProduct.getBand(SynergyConstants.MERIS_SDR_753_BANDNAME);
         final double[] merisNdviMinMax = getNdviMinMax(merisB7Band, merisB10Band);
 
-        final Band aatsrNadirSdrB1Band = sourceProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_555_BANDNAME);
-        final Band aatsrNadirSdrB2Band = sourceProduct.getBand(MerisAatsrConstants.AATSR_NADIR_SDR_659_BANDNAME);
+        final Band aatsrNadirSdrB1Band = sourceProduct.getBand(SynergyConstants.AATSR_NADIR_SDR_555_BANDNAME);
+        final Band aatsrNadirSdrB2Band = sourceProduct.getBand(SynergyConstants.AATSR_NADIR_SDR_659_BANDNAME);
         final double[] aatsrNadirNdviMinMax = getNdviMinMax(aatsrNadirSdrB1Band, aatsrNadirSdrB2Band);
 
         LstMerisAatsrOp lstOp = new LstMerisAatsrOp();

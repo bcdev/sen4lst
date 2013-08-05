@@ -49,12 +49,12 @@
             </shortDescr>
             <mnemonic/>
             <parent>tools</parent>
-            <helpID>sen4lstMaster</helpID>
+            <helpID></helpID>
             <placeAfter/>
         </action>
         <action>
-            <id>sen4lstMerisAatsrSynergyProcessing</id>
-            <class>org.esa.beam.visat.actions.DefaultOperatorAction</class>
+            <id>synergyprocessing</id>
+            <class>org.esa.beam.sen4lst.synergy.ui.SynergyAction</class>
             <operatorName>Sen4LST.Sdr</operatorName>
             <text>SDR Synergy Processor...</text>
             <dialogTitle>Sen4LST SDR Synergy Processor</dialogTitle>
@@ -63,11 +63,11 @@
             <longDescr></longDescr>
             <mnemonic/>
             <parent>sen4lst</parent>
-            <helpID></helpID>
+            <helpID>synergyprocessing</helpID>
         </action>
         <action>
-            <id>sen4lstLstProcessing</id>
-            <class>org.esa.beam.visat.actions.DefaultOperatorAction</class>
+            <id>lstprocessing</id>
+            <class>org.esa.beam.sen4lst.processing.ui.LstProcessingAction</class>
             <operatorName>Sen4LST.Lst</operatorName>
             <text>LST Processor...</text>
             <dialogTitle>Sen4LST LST Processor</dialogTitle>
@@ -76,15 +76,19 @@
             <longDescr></longDescr>
             <mnemonic/>
             <parent>sen4lst</parent>
-            <helpID></helpID>
+            <helpID>lstprocessing</helpID>
         </action>
     </extension>
 
-    <!--<extension point="beam-ui:helpSets">-->
-    <!--<helpSet>-->
-    <!--<parent>beam-help</parent>-->
-    <!--<path>doc/help/meris-glint.hs</path>-->
-    <!--</helpSet>-->
-    <!--</extension>-->
+    <extension point="beam-ui:helpSets">
+        <helpSet>
+            <parent>beam-help</parent>
+            <path>doc/help/synergyprocessing.hs</path>
+        </helpSet>
+        <helpSet>
+            <parent>beam-help</parent>
+            <path>doc/help/lstprocessing.hs</path>
+        </helpSet>
+    </extension>
 
 </module>

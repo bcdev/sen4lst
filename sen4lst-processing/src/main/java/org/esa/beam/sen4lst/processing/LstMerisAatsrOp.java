@@ -10,7 +10,7 @@ import org.esa.beam.framework.gpf.annotations.OperatorMetadata;
 import org.esa.beam.framework.gpf.annotations.Parameter;
 import org.esa.beam.framework.gpf.annotations.SourceProduct;
 import org.esa.beam.framework.gpf.pointop.*;
-import org.esa.beam.sen4lst.synergy.MerisAatsrConstants;
+import org.esa.beam.sen4lst.synergy.SynergyConstants;
 
 /**
  * Operator for computation of LST from colocated MERIS/AATSR SDR data
@@ -82,35 +82,35 @@ public class LstMerisAatsrOp extends PixelOperator {
 
     @Override
     protected void configureSourceSamples(SampleConfigurer sampleConfigurer) throws OperatorException {
-        sampleConfigurer.defineSample(SRC_MERIS_7, MerisAatsrConstants.MERIS_SDR_620_BANDNAME, merisAatsrProduct);
-        sampleConfigurer.defineSample(SRC_MERIS_10, MerisAatsrConstants.MERIS_SDR_753_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_MERIS_7, SynergyConstants.MERIS_SDR_620_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_MERIS_10, SynergyConstants.MERIS_SDR_753_BANDNAME, merisAatsrProduct);
 
-        sampleConfigurer.defineSample(SRC_AATSR_NADIR_SDR_1, MerisAatsrConstants.AATSR_NADIR_SDR_555_BANDNAME, merisAatsrProduct);
-        sampleConfigurer.defineSample(SRC_AATSR_NADIR_SDR_2, MerisAatsrConstants.AATSR_NADIR_SDR_659_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_AATSR_NADIR_SDR_1, SynergyConstants.AATSR_NADIR_SDR_555_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_AATSR_NADIR_SDR_2, SynergyConstants.AATSR_NADIR_SDR_659_BANDNAME, merisAatsrProduct);
 
-        sampleConfigurer.defineSample(SRC_AATSR_FWARD_SDR_1, MerisAatsrConstants.AATSR_FWARD_SDR_555_BANDNAME, merisAatsrProduct);
-        sampleConfigurer.defineSample(SRC_AATSR_FWARD_SDR_2, MerisAatsrConstants.AATSR_FWARD_SDR_659_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_AATSR_FWARD_SDR_1, SynergyConstants.AATSR_FWARD_SDR_555_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_AATSR_FWARD_SDR_2, SynergyConstants.AATSR_FWARD_SDR_659_BANDNAME, merisAatsrProduct);
 
-        sampleConfigurer.defineSample(SRC_AATSR_NADIR_BT_2, MerisAatsrConstants.AATSR_NADIR_BT_1100_BANDNAME, merisAatsrProduct);
-        sampleConfigurer.defineSample(SRC_AATSR_NADIR_BT_3, MerisAatsrConstants.AATSR_NADIR_BT_1200_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_AATSR_NADIR_BT_2, SynergyConstants.AATSR_NADIR_BT_1100_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_AATSR_NADIR_BT_3, SynergyConstants.AATSR_NADIR_BT_1200_BANDNAME, merisAatsrProduct);
 
-        sampleConfigurer.defineSample(SRC_AATSR_FWARD_BT_2, MerisAatsrConstants.AATSR_FWARD_BT_1100_BANDNAME, merisAatsrProduct);
-        sampleConfigurer.defineSample(SRC_AATSR_FWARD_BT_3, MerisAatsrConstants.AATSR_FWARD_BT_1200_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_AATSR_FWARD_BT_2, SynergyConstants.AATSR_FWARD_BT_1100_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_AATSR_FWARD_BT_3, SynergyConstants.AATSR_FWARD_BT_1200_BANDNAME, merisAatsrProduct);
 
-        sampleConfigurer.defineSample(SRC_SYNERGY_CLOUD_FLAGS, MerisAatsrConstants.SYNERGY_CLOUD_FLAGS_BANDNAME, merisAatsrProduct);
-        sampleConfigurer.defineSample(SRC_MERIS_L1_FLAGS, MerisAatsrConstants.MERIS_L1_FLAGS_BANDNAME, merisAatsrProduct);
-        sampleConfigurer.defineSample(SRC_AATSR_NADIR_CONFID_FLAGS, MerisAatsrConstants.AATSR_NADIR_CONFID_FLAGS_BANDNAME, merisAatsrProduct);
-        sampleConfigurer.defineSample(SRC_AATSR_FWARD_CONFID_FLAGS, MerisAatsrConstants.AATSR_FWARD_CONFID_FLAGS_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_SYNERGY_CLOUD_FLAGS, SynergyConstants.SYNERGY_CLOUD_FLAGS_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_MERIS_L1_FLAGS, SynergyConstants.MERIS_L1_FLAGS_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_AATSR_NADIR_CONFID_FLAGS, SynergyConstants.AATSR_NADIR_CONFID_FLAGS_BANDNAME, merisAatsrProduct);
+        sampleConfigurer.defineSample(SRC_AATSR_FWARD_CONFID_FLAGS, SynergyConstants.AATSR_FWARD_CONFID_FLAGS_BANDNAME, merisAatsrProduct);
 
-        if (merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME) != null) {
-            sampleConfigurer.defineSample(SRC_MERIS_L2_WATER_VAPOUR, MerisAatsrConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME, merisAatsrProduct);
+        if (merisAatsrProduct.getBand(SynergyConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME) != null) {
+            sampleConfigurer.defineSample(SRC_MERIS_L2_WATER_VAPOUR, SynergyConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME, merisAatsrProduct);
         }
 
-        final FlagCoding merisL1FlagCoding = merisAatsrProduct.getFlagCodingGroup().get(MerisAatsrConstants.MERIS_L1_FLAGS_BANDNAME);
+        final FlagCoding merisL1FlagCoding = merisAatsrProduct.getFlagCodingGroup().get(SynergyConstants.MERIS_L1_FLAGS_BANDNAME);
         final int landOcealFlagVal = merisL1FlagCoding.getAttribute("LAND_OCEAN").getData().getElemInt();
         landOceanFlagBit = (int) (Math.log(landOcealFlagVal) / Math.log(2));
 
-        final FlagCoding synergyCloudFlagCoding = merisAatsrProduct.getFlagCodingGroup().get(MerisAatsrConstants.SYNERGY_CLOUD_FLAGS_BANDNAME);
+        final FlagCoding synergyCloudFlagCoding = merisAatsrProduct.getFlagCodingGroup().get(SynergyConstants.SYNERGY_CLOUD_FLAGS_BANDNAME);
         final int synergyCloudFlagVal = synergyCloudFlagCoding.getAttribute("CLOUD").getData().getElemInt();
         synergyCloudFlagBit = (int) (Math.log(synergyCloudFlagVal) / Math.log(2));
     }
@@ -136,7 +136,7 @@ public class LstMerisAatsrOp extends PixelOperator {
             final double merisb10 = sourceSamples[SRC_MERIS_10].getDouble();
 
             double waterVapourContent;
-            if (merisAatsrProduct.getBand(MerisAatsrConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME) != null) {
+            if (merisAatsrProduct.getBand(SynergyConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME) != null) {
                 waterVapourContent = sourceSamples[SRC_MERIS_L2_WATER_VAPOUR].getDouble();
                 if (waterVapourContent < 0.0) {
                     waterVapourContent = WATER_VAPOUR_CONTENT;

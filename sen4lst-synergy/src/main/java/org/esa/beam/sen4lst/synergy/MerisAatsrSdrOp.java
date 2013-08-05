@@ -12,7 +12,6 @@ import org.esa.beam.framework.gpf.annotations.TargetProduct;
 import org.esa.beam.gpf.operators.standard.BandMathsOp;
 import org.esa.beam.synergy.operators.*;
 import org.esa.beam.synergy.util.AerosolHelpers;
-import org.esa.beam.synergy.util.SynergyConstants;
 import org.esa.beam.util.ProductUtils;
 
 import java.awt.*;
@@ -72,11 +71,11 @@ public class MerisAatsrSdrOp extends Operator {
 
         final int aveBlock = 7;
 
-        if (new File(SynergyConstants.SYNERGY_AUXDATA_HOME_DEFAULT).exists()) {
-            auxdataRoot = SynergyConstants.SYNERGY_AUXDATA_HOME_DEFAULT;
+        if (new File(org.esa.beam.synergy.util.SynergyConstants.SYNERGY_AUXDATA_HOME_DEFAULT).exists()) {
+            auxdataRoot = org.esa.beam.synergy.util.SynergyConstants.SYNERGY_AUXDATA_HOME_DEFAULT;
         } else {
             // try this one (in case of calvalus processing)
-            auxdataRoot = SynergyConstants.SYNERGY_AUXDATA_CALVALUS_DEFAULT;
+            auxdataRoot = org.esa.beam.synergy.util.SynergyConstants.SYNERGY_AUXDATA_CALVALUS_DEFAULT;
         }
         auxdataPath = auxdataRoot + File.separator + "aerosolLUTs" + File.separator + "land";
 
@@ -87,11 +86,11 @@ public class MerisAatsrSdrOp extends Operator {
         Map<String, Product> landInput = new HashMap<String, Product>(1);
         landInput.put("source", preprocessedProduct);
         Map<String, Object> landParams = new HashMap<String, Object>(6);
-        landParams.put("soilSpecName", SynergyConstants.SOIL_SPEC_PARAM_DEFAULT);
-        landParams.put("vegSpecName", SynergyConstants.VEG_SPEC_PARAM_DEFAULT);
+        landParams.put("soilSpecName", org.esa.beam.synergy.util.SynergyConstants.SOIL_SPEC_PARAM_DEFAULT);
+        landParams.put("vegSpecName", org.esa.beam.synergy.util.SynergyConstants.VEG_SPEC_PARAM_DEFAULT);
         landParams.put("aveBlock", aveBlock);
         landParams.put("useCustomLandAerosol", false);
-        landParams.put("customLandAerosol", SynergyConstants.AEROSOL_MODEL_PARAM_DEFAULT);
+        landParams.put("customLandAerosol", org.esa.beam.synergy.util.SynergyConstants.AEROSOL_MODEL_PARAM_DEFAULT);
         landProduct = GPF.createProduct(OperatorSpi.getOperatorAlias(RetrieveAerosolLandOp.class), landParams, landInput);
 
         // interpolate the land product..
@@ -121,15 +120,15 @@ public class MerisAatsrSdrOp extends Operator {
         merisGeometryBandList = new ArrayList<RasterDataNode>();
         aatsrGeometryBandList = new ArrayList<RasterDataNode>();
 
-        AerosolHelpers.getSpectralBandList(preprocessedProduct, SynergyConstants.INPUT_BANDS_PREFIX_MERIS,
-                                           SynergyConstants.INPUT_BANDS_SUFFIX_MERIS,
-                                           SynergyConstants.EXCLUDE_INPUT_BANDS_MERIS, merisBandList);
-        AerosolHelpers.getSpectralBandList(preprocessedProduct, SynergyConstants.INPUT_BANDS_PREFIX_AATSR_NAD,
-                                           SynergyConstants.INPUT_BANDS_SUFFIX_AATSR,
-                                           SynergyConstants.EXCLUDE_INPUT_BANDS_AATSR, aatsrBandListNad);
-        AerosolHelpers.getSpectralBandList(preprocessedProduct, SynergyConstants.INPUT_BANDS_PREFIX_AATSR_FWD,
-                                           SynergyConstants.INPUT_BANDS_SUFFIX_AATSR,
-                                           SynergyConstants.EXCLUDE_INPUT_BANDS_AATSR, aatsrBandListFwd);
+        AerosolHelpers.getSpectralBandList(preprocessedProduct, org.esa.beam.synergy.util.SynergyConstants.INPUT_BANDS_PREFIX_MERIS,
+                                           org.esa.beam.synergy.util.SynergyConstants.INPUT_BANDS_SUFFIX_MERIS,
+                                           org.esa.beam.synergy.util.SynergyConstants.EXCLUDE_INPUT_BANDS_MERIS, merisBandList);
+        AerosolHelpers.getSpectralBandList(preprocessedProduct, org.esa.beam.synergy.util.SynergyConstants.INPUT_BANDS_PREFIX_AATSR_NAD,
+                                           org.esa.beam.synergy.util.SynergyConstants.INPUT_BANDS_SUFFIX_AATSR,
+                                           org.esa.beam.synergy.util.SynergyConstants.EXCLUDE_INPUT_BANDS_AATSR, aatsrBandListNad);
+        AerosolHelpers.getSpectralBandList(preprocessedProduct, org.esa.beam.synergy.util.SynergyConstants.INPUT_BANDS_PREFIX_AATSR_FWD,
+                                           org.esa.beam.synergy.util.SynergyConstants.INPUT_BANDS_SUFFIX_AATSR,
+                                           org.esa.beam.synergy.util.SynergyConstants.EXCLUDE_INPUT_BANDS_AATSR, aatsrBandListFwd);
         AerosolHelpers.getGeometryBandList(preprocessedProduct, "MERIS", merisGeometryBandList);
         AerosolHelpers.getGeometryBandList(preprocessedProduct, "AATSR", aatsrGeometryBandList);
 
@@ -145,12 +144,12 @@ public class MerisAatsrSdrOp extends Operator {
         readWavelengthBandw(aatsrBandListNad, aatsrWvl, aatsrBandWidth);
 
         if (soilSurfSpec == null) {
-            String soilSpecName = auxdataRoot + File.separator + SynergyConstants.SOIL_SPEC_PARAM_DEFAULT;
+            String soilSpecName = auxdataRoot + File.separator + org.esa.beam.synergy.util.SynergyConstants.SOIL_SPEC_PARAM_DEFAULT;
             System.out.printf("   soilSpecName: %s\n", soilSpecName);
             soilSurfSpec = new SurfaceSpec(soilSpecName, merisWvl).getSpec();
         }
         if (vegSurfSpec == null) {
-            String vegSpecName = auxdataRoot + File.separator + SynergyConstants.VEG_SPEC_PARAM_DEFAULT;
+            String vegSpecName = auxdataRoot + File.separator + org.esa.beam.synergy.util.SynergyConstants.VEG_SPEC_PARAM_DEFAULT;
             System.out.printf("   vegSpecName: %s\n", vegSpecName);
             vegSurfSpec = new SurfaceSpec(vegSpecName, merisWvl).getSpec();
         }
@@ -179,11 +178,11 @@ public class MerisAatsrSdrOp extends Operator {
 
         final Tile[] geometryTiles = getGeometryTiles(merisGeometryBandList, aatsrGeometryBandList, targetRectangle);
 
-        final Tile pressureTile = getSourceTile(preprocessedProduct.getTiePointGrid(SynergyConstants.INPUT_PRESSURE_BAND_NAME),
+        final Tile pressureTile = getSourceTile(preprocessedProduct.getTiePointGrid(org.esa.beam.synergy.util.SynergyConstants.INPUT_PRESSURE_BAND_NAME),
                                                 targetRectangle);
-        final Tile ozoneTile = getSourceTile(preprocessedProduct.getTiePointGrid(SynergyConstants.INPUT_OZONE_BAND_NAME),
+        final Tile ozoneTile = getSourceTile(preprocessedProduct.getTiePointGrid(org.esa.beam.synergy.util.SynergyConstants.INPUT_OZONE_BAND_NAME),
                                              targetRectangle);
-        final Tile aotTile = getSourceTile(landUpscaledProduct.getBand(SynergyConstants.OUTPUT_AOT_BAND_NAME + "_filter"),
+        final Tile aotTile = getSourceTile(landUpscaledProduct.getBand(org.esa.beam.synergy.util.SynergyConstants.OUTPUT_AOT_BAND_NAME + "_filter"),
                                            targetRectangle);
         final Tile validPixelTile = getSourceTile(validBand, targetRectangle);
 
@@ -194,7 +193,7 @@ public class MerisAatsrSdrOp extends Operator {
         aardvarc.setSpecSoil(soilSurfSpec);
         aardvarc.setSpecVeg(vegSurfSpec);
 
-        final int aeroModel = Integer.parseInt(SynergyConstants.AEROSOL_MODEL_PARAM_DEFAULT);
+        final int aeroModel = Integer.parseInt(org.esa.beam.synergy.util.SynergyConstants.AEROSOL_MODEL_PARAM_DEFAULT);
         ReflectanceBinLUT toaLut = new ReflectanceBinLUT(auxdataPath, aeroModel, merisWvl, aatsrWvl);
         final float[] lutAlbedo = toaLut.getAlbDim();
         final float[] lutAot = toaLut.getAotDim();
@@ -277,18 +276,18 @@ public class MerisAatsrSdrOp extends Operator {
                     for (int i = 0; i < merisWvl.length; i++) {
                         if (sdrMerisBandNames[i] != null) {
                             Tile targetTile = targetTiles.get(targetProduct.getBand(sdrMerisBandNames[i]));
-                            targetTile.setSample(iX, iY, SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE);
+                            targetTile.setSample(iX, iY, org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE);
                         }
                     }
                     for (int i = 0; i < aatsrWvl.length; i++) {
                         Tile targetTile;
                         if (sdrAatsrBandNames[0][i] != null) {
                             targetTile = targetTiles.get(targetProduct.getBand(sdrAatsrBandNames[0][i]));
-                            targetTile.setSample(iX, iY, SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE);
+                            targetTile.setSample(iX, iY, org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE);
                         }
                         if (sdrAatsrBandNames[1][i] != null) {
                             targetTile = targetTiles.get(targetProduct.getBand(sdrAatsrBandNames[1][i]));
-                            targetTile.setSample(iX, iY, SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE);
+                            targetTile.setSample(iX, iY, org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE);
                         }
                     }
                 }
@@ -350,13 +349,13 @@ public class MerisAatsrSdrOp extends Operator {
 
         for (int iWL = 0; iWL < merisWvl.length; iWL++) {
             final int thisWvl = Math.round(merisWvl[iWL]);
-            if (thisWvl == MerisAatsrConstants.MERIS_BAND6_WVL || thisWvl == MerisAatsrConstants.MERIS_BAND10_WVL) {
+            if (thisWvl == SynergyConstants.MERIS_BAND6_WVL || thisWvl == SynergyConstants.MERIS_BAND10_WVL) {
                 final String wvlSubstring = String.format("_%d", thisWvl);
-                sdrMerisBandNames[iWL] = SynergyConstants.OUTPUT_SDR_BAND_NAME + wvlSubstring + "_MERIS";
+                sdrMerisBandNames[iWL] = org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NAME + wvlSubstring + "_MERIS";
                 targetBand = new Band(sdrMerisBandNames[iWL], ProductData.TYPE_FLOAT32, rasterWidth, rasterHeight);
-                targetBand.setDescription(SynergyConstants.OUTPUT_SDR_BAND_DESCRIPTION);
-                targetBand.setNoDataValue(SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE);
-                targetBand.setNoDataValueUsed(SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE_USED);
+                targetBand.setDescription(org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_DESCRIPTION);
+                targetBand.setNoDataValue(org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE);
+                targetBand.setNoDataValueUsed(org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE_USED);
                 targetBand.setValidPixelExpression(sdrMerisBandNames[iWL] + ">= 0 AND " + sdrMerisBandNames[iWL] + "<= 1");
                 targetBand.setSpectralBandIndex(iWL);
                 targetBand.setSpectralBandwidth(merisBandWidth[iWL]);
@@ -369,15 +368,15 @@ public class MerisAatsrSdrOp extends Operator {
         for (int iView = 0; iView < 2; iView++) {
             for (int iWL = 0; iWL < aatsrWvl.length; iWL++) {
                 final int thisWvl = Math.round(aatsrWvl[iWL]);
-                if (thisWvl == MerisAatsrConstants.AATSR_BAND1_WVL || thisWvl == MerisAatsrConstants.AATSR_BAND2_WVL) {
+                if (thisWvl == SynergyConstants.AATSR_BAND1_WVL || thisWvl == SynergyConstants.AATSR_BAND2_WVL) {
                     final String wvlSubstring = String.format("_%d", Math.round(aatsrWvl[iWL]));
-                    sdrAatsrBandNames[iView][iWL] = SynergyConstants.OUTPUT_SDR_BAND_NAME
+                    sdrAatsrBandNames[iView][iWL] = org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NAME
                             + viewString[iView] + wvlSubstring + "_AATSR";
                     targetBand = new Band(sdrAatsrBandNames[iView][iWL], ProductData.TYPE_FLOAT32, rasterWidth,
                                           rasterHeight);
-                    targetBand.setDescription(SynergyConstants.OUTPUT_SDR_BAND_DESCRIPTION);
-                    targetBand.setNoDataValue(SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE);
-                    targetBand.setNoDataValueUsed(SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE_USED);
+                    targetBand.setDescription(org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_DESCRIPTION);
+                    targetBand.setNoDataValue(org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE);
+                    targetBand.setNoDataValueUsed(org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NODATAVALUE_USED);
                     targetBand.setValidPixelExpression(
                             sdrAatsrBandNames[iView][iWL] + ">= 0 AND " + sdrAatsrBandNames[iView][iWL] + "<= 1");
                     targetBand.setSpectralBandIndex(iWL);
