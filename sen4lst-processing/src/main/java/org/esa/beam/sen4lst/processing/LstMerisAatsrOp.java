@@ -78,6 +78,10 @@ public class LstMerisAatsrOp extends PixelOperator {
                 band.setNoDataValueUsed(true);
             }
         }
+
+        Band band = targetProduct.addBand(LstConstants.EMISSIVITY_BAND_NAME, ProductData.TYPE_FLOAT32);
+        band.setNoDataValue(Float.NaN);
+        band.setNoDataValueUsed(true);
     }
 
     @Override
@@ -120,6 +124,7 @@ public class LstMerisAatsrOp extends PixelOperator {
         for (int i = 0; i < LstConstants.LST_BAND_NAMES.length - 1; i++) {
             sampleConfigurer.defineSample(i, LstConstants.LST_BAND_NAMES[i]);
         }
+        sampleConfigurer.defineSample(LstConstants.LST_BAND_NAMES.length - 1, LstConstants.EMISSIVITY_BAND_NAME);
     }
 
     @Override
@@ -157,18 +162,18 @@ public class LstMerisAatsrOp extends PixelOperator {
             final double bt3O = aatsrFwardBt3;   // not needed? ok!
 
             // use MERIS NDVI:
-//            final double ndviMeris = (merisb10 - merisb7) / (merisb10 + merisb7);
-//            final double merisNdviMin = merisNdviMinMax[0];
-//            final double merisNdviMax = merisNdviMinMax[1];
-//            final double fvc = (ndviMeris - merisNdviMin) / (merisNdviMax - merisNdviMin);
+            final double ndviMeris = (merisb10 - merisb7) / (merisb10 + merisb7);
+            final double merisNdviMin = merisNdviMinMax[0];
+            final double merisNdviMax = merisNdviMinMax[1];
+            final double fvc = (ndviMeris - merisNdviMin) / (merisNdviMax - merisNdviMin);
 
             // use AATSR NDVI:
-            final double aatsrNadirSdrB1 = sourceSamples[SRC_AATSR_NADIR_SDR_1].getDouble();
-            final double aatsrNadirSdrB2 = sourceSamples[SRC_AATSR_NADIR_SDR_2].getDouble();
-            final double ndviAatsrNadir = (aatsrNadirSdrB2 - aatsrNadirSdrB1) / (aatsrNadirSdrB2 + aatsrNadirSdrB1);
-            final double aatsrNadirNdviMin = aatsrNadirNdviMinMax[0];
-            final double aatsrNadirNdviMax = aatsrNadirNdviMinMax[1];
-            final double fvc = (ndviAatsrNadir - aatsrNadirNdviMin) / (aatsrNadirNdviMax - aatsrNadirNdviMin);
+//            final double aatsrNadirSdrB1 = sourceSamples[SRC_AATSR_NADIR_SDR_1].getDouble();
+//            final double aatsrNadirSdrB2 = sourceSamples[SRC_AATSR_NADIR_SDR_2].getDouble();
+//            final double ndviAatsrNadir = (aatsrNadirSdrB2 - aatsrNadirSdrB1) / (aatsrNadirSdrB2 + aatsrNadirSdrB1);
+//            final double aatsrNadirNdviMin = aatsrNadirNdviMinMax[0];
+//            final double aatsrNadirNdviMax = aatsrNadirNdviMinMax[1];
+//            final double fvc = (ndviAatsrNadir - aatsrNadirNdviMin) / (aatsrNadirNdviMax - aatsrNadirNdviMin);
 
             final double eB1 = 0.970 * (1 - fvc) + (0.982 + 0.005) * fvc;
             final double eB2 = 0.977 * (1 - fvc) + (0.984 + 0.005) * fvc;
@@ -205,11 +210,13 @@ public class LstMerisAatsrOp extends PixelOperator {
 
             targetSamples[targetIndex++].set(lstSw);
             targetSamples[targetIndex++].set(lstDa);
-            targetSamples[targetIndex].set(lstSwda);
+            targetSamples[targetIndex++].set(lstSwda);
+            targetSamples[targetIndex].set(em);
         } else {
             targetSamples[0].set(Double.NaN);
             targetSamples[1].set(Double.NaN);
             targetSamples[2].set(Double.NaN);
+            targetSamples[3].set(Double.NaN);
         }
     }
 
