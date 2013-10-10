@@ -20,6 +20,7 @@ import org.esa.beam.sen4lst.synergy.SynergyConstants;
 @OperatorMetadata(alias = "Sen4LST.MerisAatsr", version = "1.0",
                   authors = "Olaf Danne, Ralf Quast",
                   copyright = "(c) 2012 Brockmann Consult",
+                  internal = true,
                   description = "Computes LST from colocated MERIS/AATSR SDR data.")
 public class LstMerisAatsrOp extends PixelOperator {
 

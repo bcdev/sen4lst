@@ -26,9 +26,9 @@ import java.io.IOException;
  *
  * @author olafd
  */
-@OperatorMetadata(alias = "Sen4LST.Lst", version = "1.0",
+@OperatorMetadata(alias = "Sen4LST.Lst", version = "1.0-SNAPSHOT",
                   authors = "Olaf Danne, Ralf Quast",
-                  copyright = "(c) 2012 Brockmann Consult",
+                  copyright = "(c) 2013 Brockmann Consult",
                   description = "Sen4LST master operator for LST retrievals.")
 public class LstMasterOp extends Operator {
 
@@ -42,9 +42,9 @@ public class LstMasterOp extends Operator {
 
     @Parameter(defaultValue = "/data/sen4lst/input", description = "OLCI/SLSTR simulation data directory")
     // e.g., /data/sen4lst/input
-    private File lstSimulationDataDir;
+    private File modtranSimulationDataDirectory;
 
-    @Parameter(defaultValue = "000000_0000Z", description = "Timestamp in 'new' (Modtran) OLCI/SLSTR simulation data filename, as 'yyMMdd_hhmmZ'")
+    @Parameter(defaultValue = "yymmdd_hhmmZ", description = "Timestamp in 'new' (Modtran) OLCI/SLSTR simulation data filename, as 'yyMMdd_hhmmZ'")
     private String modtranSimulationDataFileTimestamp;
 
     @Parameter(defaultValue = "1",
@@ -64,7 +64,7 @@ public class LstMasterOp extends Operator {
 
     @Override
     public void initialize() throws OperatorException {
-        lstSimulationDataPath = lstSimulationDataDir.getAbsolutePath();
+        lstSimulationDataPath = modtranSimulationDataDirectory.getAbsolutePath();
 
         if (processSimulationData) {
             if (useOldSimulationData) {
@@ -175,7 +175,7 @@ public class LstMasterOp extends Operator {
         // OLCI_300m_z1, SLSTRn_500m_z1, SLSTRn_1km_z1, SLSTRo_500m_z1, SLSTRo_1km_z1
 
         final String geolocatedFileSuffix = "_z" + String.format("%01d", modtranAtmosphereId) + ".hdr";
-        final String[] geolocatedFileNames = lstSimulationDataDir.list();
+        final String[] geolocatedFileNames = modtranSimulationDataDirectory.list();
 
         for (String geolocatedFileName : geolocatedFileNames) {
             final String matchingFilename = productIdentifier.toLowerCase() + geolocatedFileSuffix;
@@ -191,7 +191,7 @@ public class LstMasterOp extends Operator {
         // SEN4LST_TOA_090620_0943Z_ATM01.HDR
 
         final String modtranFileSuffix = "_ATM" + String.format("%02d", modtranAtmosphereId) + ".HDR";
-        final String[] modtranFileNames = lstSimulationDataDir.list();
+        final String[] modtranFileNames = modtranSimulationDataDirectory.list();
 
         for (String modtranFileName : modtranFileNames) {
             final String matchingFilename = LstConstants.MODTRAN_FILENAME_PREFIX + modtranSimulationDataFileTimestamp + modtranFileSuffix;

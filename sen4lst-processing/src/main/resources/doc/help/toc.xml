@@ -5,7 +5,9 @@
 <toc version="2.0" categoryclosedimage="folder" categoryopenimage="folder" topicimage="doc">
 
     <tocitem text="Data Processors">
-        <tocitem text="LST Processing Tool" target="lstprocessing">
+        <tocitem text="LST Processor" target="LstProcessorPlugIn">
+            <tocitem text="Overview" target="algorithm"/>
+            <tocitem text="Processor Description" target="processor"/>
         </tocitem>
     </tocitem>
 </toc>

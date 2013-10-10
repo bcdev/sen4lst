@@ -19,8 +19,8 @@ public class SynergyAction extends AbstractVisatAction {
         if (dialog == null) {
             dialog = new DefaultSingleTargetProductDialog("Sen4LST.Sdr",
                                                           getAppContext(),
-                                                          "Sen4LST Synergy Processing - " + SynergyConstants.SYNERGY_PROCESSING_VERSION,
-                                                          "synergyprocessing");
+                                                          "SDR Synergy Processing - " + SynergyConstants.SYNERGY_PROCESSING_VERSION,
+                                                          "LstProcessorPlugIn");
         }
         dialog.show();
     }

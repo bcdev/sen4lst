@@ -170,13 +170,13 @@
             <dependency>
                 <groupId>org.esa.beam.synergy</groupId>
                 <artifactId>beam-meris-aatsr-synergy-preprocessing</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.4</version>
             </dependency>
 
             <dependency>
                 <groupId>org.esa.beam.synergy</groupId>
                 <artifactId>beam-meris-aatsr-synergy-core</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.4</version>
             </dependency>
 
             <!-- JUnit Libraries ############################################# -->

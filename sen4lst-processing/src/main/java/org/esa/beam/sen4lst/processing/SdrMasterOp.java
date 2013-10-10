@@ -19,10 +19,9 @@ import org.esa.beam.util.ProductUtils;
  * @author olafd
  */
 @OperatorMetadata(alias = "Sen4LST.Sdr",
-                  version = "1.1",
-                  authors = "Olaf Danne",
-                  copyright = "(c) 2009 by Brockmann Consult",
-                  internal = true,
+                  version = "1.0-SNAPSHOT",
+                  authors = "Olaf Danne, Ralf Quast",
+                  copyright = "(c) 2013 by Brockmann Consult",
                   description = "Sen4LST master operator for SDR retrievals.")
 public class SdrMasterOp extends Operator {
 

@@ -23,6 +23,10 @@
             <artifactId>beam-netcdf</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.esa.beam</groupId>
+            <artifactId>beam-envi-reader</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.esa.beam.sen4lst</groupId>
             <artifactId>sen4lst-synergy</artifactId>
             <version>${pom.version}</version>

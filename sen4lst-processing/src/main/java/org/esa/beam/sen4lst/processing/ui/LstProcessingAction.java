@@ -21,7 +21,7 @@ public class LstProcessingAction extends AbstractVisatAction {
             dialog = new DefaultSingleTargetProductDialog("Sen4LST.Lst",
                                                           getAppContext(),
                                                           "LST Processing - " + LstConstants.LST_PROCESSING_VERSION,
-                                                          "lstprocessing");
+                                                          "LstProcessorPlugIn");
         }
         dialog.show();
     }

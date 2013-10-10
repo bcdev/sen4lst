@@ -5,6 +5,8 @@
 
 <map version="2.0">
 
-    <mapID target="lstprocessing" url="lstprocessing/LSTProcessingTool.html"/>
+    <mapID target="LstProcessorPlugIn" url="lstprocessing/LstTool.html"/>
+    <mapID target="algorithm" url="lstprocessing/LstRetrievalOverview.html"/>
+    <mapID target="processor" url="lstprocessing/LstProcessorDescription.html"/>
 
 </map>

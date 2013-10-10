@@ -20,24 +20,14 @@
             <scope>runtime</scope>
             <includes>
                 <include>*:beam-collocation*</include>
-                <include>*:beam-idepix*</include>
-                <include>*:beam-watermask*</include>
-                <include>*:beam-unmix*</include>
+                <include>*:beam-aatsr-recalibration*</include>
+                <include>*:beam-envi-reader*</include>
+                <include>*:beam-meris-aatsr-synergy-*</include>
                 <include>*:beam-meris-brr*</include>
-                <include>*:beam-meris-case2-regional*</include>
-                <include>*:beam-meris-glint*</include>
-                <include>*:beam-meris-icol*</include>
                 <include>*:beam-meris-l2auxdata*</include>
-                <include>*:beam-meris-qaa*</include>
-                <include>*:beam-meris-radiometry*</include>
-                <include>*:beam-waterradiance-auxdata*</include>
-                <include>*:beam-flhmci*</include>
                 <include>*:beam-meris-sdr*</include>
-                <include>*:beam-netcdf*</include>
-                <include>*:coastcolour-processing*</include>
-                <include>*:coastcolour-util*</include>
-                <include>*:coastcolour-fuzzy-classification*</include>
-                <include>*:flint-processor*</include>
+                <include>*:sen4lst-processing*</include>
+                <include>*:sen4lst-synergy*</include>
             </includes>
         </dependencySet>
     </dependencySets>

@@ -21,6 +21,7 @@ import java.awt.image.PixelGrabber;
 @OperatorMetadata(alias = "Sen4LST.LstGeolocated", version = "1.0",
                   authors = "Olaf Danne, Ralf Quast",
                   copyright = "(c) 2012 Brockmann Consult",
+                  internal = true,
                   description = "Computes LST from geolocated OLCI/SLSTR simulation data.")
 public class LstGeolocatedOp extends PixelOperator {
 

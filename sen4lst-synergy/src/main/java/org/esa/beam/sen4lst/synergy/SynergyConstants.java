@@ -7,7 +7,7 @@ package org.esa.beam.sen4lst.synergy;
  */
 public class SynergyConstants {
 
-    public static final String SYNERGY_PROCESSING_VERSION = "v1.0";
+    public static final String SYNERGY_PROCESSING_VERSION = "v1.0-SNAPSHOT";
 
     public static final int MERIS_BAND6_WVL = 620;
     public static final int MERIS_BAND10_WVL = 753;

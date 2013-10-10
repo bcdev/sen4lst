@@ -63,7 +63,7 @@
             <longDescr></longDescr>
             <mnemonic/>
             <parent>sen4lst</parent>
-            <helpID>synergyprocessing</helpID>
+            <helpID>LstProcessorPlugIn</helpID>
         </action>
         <action>
             <id>lstprocessing</id>
@@ -76,18 +76,14 @@
             <longDescr></longDescr>
             <mnemonic/>
             <parent>sen4lst</parent>
-            <helpID>lstprocessing</helpID>
+            <helpID>LstProcessorPlugIn</helpID>
         </action>
     </extension>
 
     <extension point="beam-ui:helpSets">
         <helpSet>
             <parent>beam-help</parent>
-            <path>doc/help/synergyprocessing.hs</path>
-        </helpSet>
-        <helpSet>
-            <parent>beam-help</parent>
-            <path>doc/help/lstprocessing.hs</path>
+            <path>doc/help/LstProcessor.hs</path>
         </helpSet>
     </extension>
 

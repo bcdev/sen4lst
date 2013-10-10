@@ -18,6 +18,7 @@ import org.esa.beam.framework.gpf.pointop.*;
 @OperatorMetadata(alias = "Sen4LST.Modtran", version = "1.0",
                   authors = "Olaf Danne, Ralf Quast",
                   copyright = "(c) 2012 Brockmann Consult",
+                  internal = true,
                   description = "Computes LST from MODTRAN simulation data.")
 public class LstModtranOp extends PixelOperator {
 
