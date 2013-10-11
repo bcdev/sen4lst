@@ -12,7 +12,7 @@
 
     <vendor>Brockmann Consult GmbH</vendor>
     <contactAddress>Max Planck Str.2, 21502 Geesthacht (Germany)</contactAddress>
-    <copyright>(C) 2007 by Brockmann Consult GmbH</copyright>
+    <copyright>(C) 2013 by Brockmann Consult GmbH</copyright>
     <url>http://envisat.esa.int/beam</url>
     <licenseUrl>http://www.gnu.org/licenses/gpl.html</licenseUrl>
 
@@ -41,29 +41,5 @@
     <!-- Other Operators -->
 
     <categories>Processor,MERIS</categories>
-
-    <!--todo: check if needed-->
-    <!--<extension point="beam-ui:actions">-->
-        <!--<action>-->
-            <!--<id>sen4lstMerisAatsrSynergyProcessing</id>-->
-            <!--<class>org.esa.beam.visat.actions.DefaultOperatorAction</class>-->
-            <!--<operatorName>Sen4LST.synergy.merisaatsr</operatorName>-->
-            <!--<text>Sen4LST MERIS/AATSR Synergy Processor...</text>-->
-            <!--<dialogTitle>Sen4LST MERIS/AATSR Synergy Processor</dialogTitle>-->
-            <!--<targetProductNameSuffix>_syn</targetProductNameSuffix>-->
-            <!--<shortDescr></shortDescr>-->
-            <!--<longDescr></longDescr>-->
-            <!--<mnemonic/>-->
-            <!--<parent>sen4lst</parent>-->
-            <!--<helpID></helpID>-->
-        <!--</action>-->
-    <!--</extension>-->
-
-    <!--<extension point="beam-ui:helpSets">-->
-    <!--<helpSet>-->
-    <!--<parent>beam-help</parent>-->
-    <!--<path>doc/help/meris-glint.hs</path>-->
-    <!--</helpSet>-->
-    <!--</extension>-->
 
 </module>

@@ -9,7 +9,7 @@ import org.esa.beam.framework.gpf.annotations.Parameter;
 import org.esa.beam.framework.gpf.annotations.SourceProduct;
 import org.esa.beam.framework.gpf.annotations.TargetProduct;
 import org.esa.beam.sen4lst.synergy.InstrumentCombination;
-import org.esa.beam.sen4lst.synergy.SynergyConstants;
+import org.esa.beam.sen4lst.synergy.Sen4LstSynergyConstants;
 import org.esa.beam.sen4lst.synergy.MerisAatsrSynergyOp;
 import org.esa.beam.util.ProductUtils;
 
@@ -48,8 +48,8 @@ public class SdrMasterOp extends Operator {
             final Product synergyProduct = synergyOp.getTargetProduct();
             setTargetProduct(synergyProduct);
             // copy water vapour band if available in source product (merge from L2):
-            if (firstSourceProduct.getBand(SynergyConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME) != null) {
-                ProductUtils.copyBand(SynergyConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME,
+            if (firstSourceProduct.getBand(Sen4LstSynergyConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME) != null) {
+                ProductUtils.copyBand(Sen4LstSynergyConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME,
                                       firstSourceProduct, getTargetProduct(), true);
             }
         } else if (instruments == InstrumentCombination.OLCI_SLSTR) {

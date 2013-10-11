@@ -5,7 +5,7 @@ package org.esa.beam.sen4lst.synergy;
  *
  * @author olafd
  */
-public class SynergyConstants {
+public class Sen4LstSynergyConstants {
 
     public static final String SYNERGY_PROCESSING_VERSION = "v1.0-SNAPSHOT";
 
@@ -36,4 +36,10 @@ public class SynergyConstants {
     public static final String SYNERGY_CLOUD_FLAGS_BANDNAME = "cloud_flags_synergy";
 
     public static final String MERIS_L2_WATER_VAPOUR_BAND_NAME = "water_vapour_L2";
+
+    public static final String AUXDATA_ERROR_MESSAGE =
+            "Synergy auxdata are missing or could not be read.\n\n"
+                    + "For the Synergy aerosol retrieval and atmospheric correction, various \n"
+                    + "auxiliary data (such as lookup tables and surface reflectance spectrum files), \n"
+                    + "are required. Please install auxiliary data as described in help documentation. ";
 }

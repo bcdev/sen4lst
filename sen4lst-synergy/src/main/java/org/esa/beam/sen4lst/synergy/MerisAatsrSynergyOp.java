@@ -62,7 +62,7 @@ public class MerisAatsrSynergyOp extends Operator {
         SynergyUtils.validateAatsrProduct(aatsrSourceProduct);
 
         if (!SynergyUtils.validateAuxdata(false, SynergyConstants.AEROSOL_MODEL_PARAM_DEFAULT)) {
-            return;
+            throw new OperatorException(Sen4LstSynergyConstants.AUXDATA_ERROR_MESSAGE);
         }
 
         // get the colocated 'preprocessing' product...

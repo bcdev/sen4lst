@@ -349,7 +349,7 @@ public class MerisAatsrSdrOp extends Operator {
 
         for (int iWL = 0; iWL < merisWvl.length; iWL++) {
             final int thisWvl = Math.round(merisWvl[iWL]);
-            if (thisWvl == SynergyConstants.MERIS_BAND6_WVL || thisWvl == SynergyConstants.MERIS_BAND10_WVL) {
+            if (thisWvl == Sen4LstSynergyConstants.MERIS_BAND6_WVL || thisWvl == Sen4LstSynergyConstants.MERIS_BAND10_WVL) {
                 final String wvlSubstring = String.format("_%d", thisWvl);
                 sdrMerisBandNames[iWL] = org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NAME + wvlSubstring + "_MERIS";
                 targetBand = new Band(sdrMerisBandNames[iWL], ProductData.TYPE_FLOAT32, rasterWidth, rasterHeight);
@@ -368,7 +368,7 @@ public class MerisAatsrSdrOp extends Operator {
         for (int iView = 0; iView < 2; iView++) {
             for (int iWL = 0; iWL < aatsrWvl.length; iWL++) {
                 final int thisWvl = Math.round(aatsrWvl[iWL]);
-                if (thisWvl == SynergyConstants.AATSR_BAND1_WVL || thisWvl == SynergyConstants.AATSR_BAND2_WVL) {
+                if (thisWvl == Sen4LstSynergyConstants.AATSR_BAND1_WVL || thisWvl == Sen4LstSynergyConstants.AATSR_BAND2_WVL) {
                     final String wvlSubstring = String.format("_%d", Math.round(aatsrWvl[iWL]));
                     sdrAatsrBandNames[iView][iWL] = org.esa.beam.synergy.util.SynergyConstants.OUTPUT_SDR_BAND_NAME
                             + viewString[iView] + wvlSubstring + "_AATSR";

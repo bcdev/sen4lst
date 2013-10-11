@@ -12,7 +12,7 @@
 
     <vendor>Brockmann Consult GmbH</vendor>
     <contactAddress>Max Planck Str.2, 21502 Geesthacht (Germany)</contactAddress>
-    <copyright>(C) 2007 by Brockmann Consult GmbH</copyright>
+    <copyright>(C) 2013 by Brockmann Consult GmbH</copyright>
     <url>http://envisat.esa.int/beam</url>
     <licenseUrl>http://www.gnu.org/licenses/gpl.html</licenseUrl>
 
@@ -63,7 +63,7 @@
             <longDescr></longDescr>
             <mnemonic/>
             <parent>sen4lst</parent>
-            <helpID>LstProcessorPlugIn</helpID>
+            <helpID>SdrProcessorPlugIn</helpID>
         </action>
         <action>
             <id>lstprocessing</id>

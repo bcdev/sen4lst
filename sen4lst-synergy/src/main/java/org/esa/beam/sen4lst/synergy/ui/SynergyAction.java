@@ -3,7 +3,7 @@ package org.esa.beam.sen4lst.synergy.ui;
 import org.esa.beam.framework.gpf.ui.DefaultSingleTargetProductDialog;
 import org.esa.beam.framework.ui.ModelessDialog;
 import org.esa.beam.framework.ui.command.CommandEvent;
-import org.esa.beam.sen4lst.synergy.SynergyConstants;
+import org.esa.beam.sen4lst.synergy.Sen4LstSynergyConstants;
 import org.esa.beam.visat.actions.AbstractVisatAction;
 
 /**
@@ -19,7 +19,7 @@ public class SynergyAction extends AbstractVisatAction {
         if (dialog == null) {
             dialog = new DefaultSingleTargetProductDialog("Sen4LST.Sdr",
                                                           getAppContext(),
-                                                          "SDR Synergy Processing - " + SynergyConstants.SYNERGY_PROCESSING_VERSION,
+                                                          "SDR Synergy Processing - " + Sen4LstSynergyConstants.SYNERGY_PROCESSING_VERSION,
                                                           "LstProcessorPlugIn");
         }
         dialog.show();

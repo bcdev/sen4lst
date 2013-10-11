@@ -50,7 +50,7 @@
 </p>
 
 <p>
-    For the OLCI/SLSTR simulation mode explaine below, this step is skipped. In this case,
+    For the OLCI/SLSTR simulation mode explained below, this step is skipped. In this case,
     the supported
     input simulation data are already (OLCI/SLSTR) collocated products which were
     preprocessed independently.
@@ -60,7 +60,7 @@
     In the second step, an LST product is generated from the MERIS/AATSR (OLCI/SLSTR)
     collocated SDR product. This step needs to be done with the LST Processing Tool.
     The LST Processing Tool can be invoked from the VISAT tool menu by selecting
-    the <b>LST Processr...</b> command, or in batch mode by using the command line
+    the <b>LST Processor...</b> command, or in batch mode by using the command line
     tool <i><code>gpt</code></i> (Graph Processing Tool) which is located
     in the BEAM <code>bin</code> directory.
 </p>
@@ -70,6 +70,37 @@
 
 <!--- Synergy Processor -------------------------------------------->
 <h3>SDR Synergy Processor</h3>
+
+<h4>Auxiliary Data</h4>
+
+<p>
+    For the Synergy aerosol retrieval and atmospheric correction, various
+    auxiliary data (such as lookup tables and surface reflectance spectrum files)
+    are required by the <b>SDR Synergy Processor</b> . Please install these auxiliary data as follows:
+
+    <div class="itemizedlist">
+        <ul type="bullet">
+            <li style="list-style-type: disc">
+                Login at BC ftp site: ftp.brockmann-consult.de
+            </li>
+            <li style="list-style-type: disc">
+                username: synergy
+            </li>
+            <li style="list-style-type: disc">
+                password: MER_ATS_SYN
+            </li>
+            <li style="list-style-type: disc">
+                cd to meris-aatsr-synergy/auxdata
+            </li>
+            <li style="list-style-type: disc">
+                download file 'beam-meris-aatsr-synergy-auxdata-standard.zip'
+            </li>
+            <li style="list-style-type: disc">
+                extract the archive into your $(user.home)/.beam folder
+            </li>
+        </ul>
+    </div>
+</p>
 
 <h4>I/O Parameters</h4>
 
@@ -354,6 +385,7 @@
 </p>
 
 <h4>Button Group</h4>
+
 <p>
     The Button Group has the same functionalities as explained above for
     the SDR Synergy processor.
