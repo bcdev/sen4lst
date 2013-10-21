@@ -27,12 +27,14 @@ import java.io.IOException;
  * @author olafd
  */
 @OperatorMetadata(alias = "Sen4LST.Lst", version = "1.0-SNAPSHOT",
-                  authors = "Olaf Danne, Ralf Quast",
-                  copyright = "(c) 2013 Brockmann Consult",
+                  authors = "O. Danne, R. Quast (Brockmann Consult, Software) \n" +
+                            "J.C. Jiminez-Munoz, J. Sobrino (Univ. Valencia, Algorithms) \n" +
+                            "P.R.N. North (Univ. Swansea, Algorithms)",
+                  copyright = "(c) 2013 Brockmann Consult, Univ. Valencia, Univ. Swansea",
                   description = "Sen4LST master operator for LST retrievals.")
 public class LstMasterOp extends Operator {
 
-    @SourceProduct(alias = "Synergy Processing Result",
+    @SourceProduct(alias = "synergyProcessingResult",
                    optional = true,
                    description = "MERIS/AATSR (real) or OLCI/SLSTR (simulated) SDR source product.")
     Product sourceProduct;
@@ -82,11 +84,13 @@ public class LstMasterOp extends Operator {
         // get minimum NDVIs:
         final Band merisB7Band = sourceProduct.getBand(Sen4LstSynergyConstants.MERIS_SDR_620_BANDNAME);
         final Band merisB10Band = sourceProduct.getBand(Sen4LstSynergyConstants.MERIS_SDR_753_BANDNAME);
-        final double[] merisNdviMinMax = getNdviMinMax(merisB7Band, merisB10Band);
+//        final double[] merisNdviMinMax = getNdviMinMax(merisB7Band, merisB10Band);
+        final double[] merisNdviMinMax = new double[]{0.2, 0.85};  // changed after FM, 20131017
 
         final Band aatsrNadirSdrB1Band = sourceProduct.getBand(Sen4LstSynergyConstants.AATSR_NADIR_SDR_555_BANDNAME);
         final Band aatsrNadirSdrB2Band = sourceProduct.getBand(Sen4LstSynergyConstants.AATSR_NADIR_SDR_659_BANDNAME);
-        final double[] aatsrNadirNdviMinMax = getNdviMinMax(aatsrNadirSdrB1Band, aatsrNadirSdrB2Band);
+//        final double[] aatsrNadirNdviMinMax = getNdviMinMax(aatsrNadirSdrB1Band, aatsrNadirSdrB2Band);
+        final double[] aatsrNadirNdviMinMax = new double[]{0.2, 0.85};  // changed after FM, 20131017
 
         LstMerisAatsrOp lstOp = new LstMerisAatsrOp();
         lstOp.setSourceProduct("merisAatsrProduct", sourceProduct);
@@ -193,6 +197,9 @@ public class LstMasterOp extends Operator {
         final String modtranFileSuffix = "_ATM" + String.format("%02d", modtranAtmosphereId) + ".HDR";
         final String[] modtranFileNames = modtranSimulationDataDirectory.list();
 
+        if (modtranFileNames == null) {
+            throw new OperatorException("No Modtran simulation input product found in '" + lstSimulationDataPath + "'.");
+        }
         for (String modtranFileName : modtranFileNames) {
             final String matchingFilename = LstConstants.MODTRAN_FILENAME_PREFIX + modtranSimulationDataFileTimestamp + modtranFileSuffix;
             if (modtranFileName.toUpperCase().equals(matchingFilename)) {

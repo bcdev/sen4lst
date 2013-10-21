@@ -25,7 +25,9 @@ public class LstConstants {
     public static final String OBLIQUE_EMISSIVITY_9_BAND_NAME = "e9o";
 
     public static final String[] LST_BAND_NAMES = new String[]{"LST_SW", "LST_DA", "LST_SWDA", "LST_INSITU"};
-    public static final String EMISSIVITY_BAND_NAME = "EMISSIVITY";
+    public static final String EMISSIVITY_BAND_NAME = "EMISSIVITY_mean";
+    public static final String EMISSIVITY_BAND1_BAND_NAME = "EMISSIVITY_Band1";
+    public static final String EMISSIVITY_BAND2_BAND_NAME = "EMISSIVITY_Band2";
 
     //    public static final double[] LST_SW_COEFFS = new double[] {-0.268,1.084,0.277,45.11,-0.73,-125.00,16.70};
     // NEW SW coefficients Juan-Carlos, 2013/09/10:

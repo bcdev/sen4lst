@@ -18,6 +18,10 @@ public class LstProcessingAction extends AbstractVisatAction {
     @Override
     public void actionPerformed(CommandEvent event) {
         if (dialog == null) {
+//            dialog = new LstProcessingDialog("Sen4LST.Lst",
+//                                                          getAppContext(),
+//                                                          "LST Processing - " + LstConstants.LST_PROCESSING_VERSION,
+//                                                          "LstProcessorPlugIn");
             dialog = new DefaultSingleTargetProductDialog("Sen4LST.Lst",
                                                           getAppContext(),
                                                           "LST Processing - " + LstConstants.LST_PROCESSING_VERSION,

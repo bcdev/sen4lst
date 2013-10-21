@@ -25,10 +25,10 @@ import org.esa.beam.util.ProductUtils;
                   description = "Sen4LST master operator for SDR retrievals.")
 public class SdrMasterOp extends Operator {
 
-    @SourceProduct(alias = "Master",
+    @SourceProduct(alias = "master",
                    description = "'Master' instrument source product.")
     Product firstSourceProduct;
-    @SourceProduct(alias = "Slave",
+    @SourceProduct(alias = "slave",
                    description = "'Slave' instrument source product.")
     Product secondSourceProduct;
 

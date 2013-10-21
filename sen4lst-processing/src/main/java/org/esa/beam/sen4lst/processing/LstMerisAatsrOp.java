@@ -83,6 +83,12 @@ public class LstMerisAatsrOp extends PixelOperator {
         Band band = targetProduct.addBand(LstConstants.EMISSIVITY_BAND_NAME, ProductData.TYPE_FLOAT32);
         band.setNoDataValue(Float.NaN);
         band.setNoDataValueUsed(true);
+        band = targetProduct.addBand(LstConstants.EMISSIVITY_BAND1_BAND_NAME, ProductData.TYPE_FLOAT32);
+        band.setNoDataValue(Float.NaN);
+        band.setNoDataValueUsed(true);
+        band = targetProduct.addBand(LstConstants.EMISSIVITY_BAND2_BAND_NAME, ProductData.TYPE_FLOAT32);
+        band.setNoDataValue(Float.NaN);
+        band.setNoDataValueUsed(true);
     }
 
     @Override
@@ -126,6 +132,8 @@ public class LstMerisAatsrOp extends PixelOperator {
             sampleConfigurer.defineSample(i, LstConstants.LST_BAND_NAMES[i]);
         }
         sampleConfigurer.defineSample(LstConstants.LST_BAND_NAMES.length - 1, LstConstants.EMISSIVITY_BAND_NAME);
+        sampleConfigurer.defineSample(LstConstants.LST_BAND_NAMES.length, LstConstants.EMISSIVITY_BAND1_BAND_NAME);
+        sampleConfigurer.defineSample(LstConstants.LST_BAND_NAMES.length + 1, LstConstants.EMISSIVITY_BAND2_BAND_NAME);
     }
 
     @Override
@@ -212,12 +220,16 @@ public class LstMerisAatsrOp extends PixelOperator {
             targetSamples[targetIndex++].set(lstSw);
             targetSamples[targetIndex++].set(lstDa);
             targetSamples[targetIndex++].set(lstSwda);
-            targetSamples[targetIndex].set(em);
+            targetSamples[targetIndex++].set(em);
+            targetSamples[targetIndex++].set(eB1);
+            targetSamples[targetIndex].set(eB2);
         } else {
             targetSamples[0].set(Double.NaN);
             targetSamples[1].set(Double.NaN);
             targetSamples[2].set(Double.NaN);
             targetSamples[3].set(Double.NaN);
+            targetSamples[4].set(Double.NaN);
+            targetSamples[5].set(Double.NaN);
         }
     }
 
