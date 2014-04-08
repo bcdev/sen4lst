@@ -26,10 +26,10 @@ import org.esa.beam.util.ProductUtils;
 public class SdrMasterOp extends Operator {
 
     @SourceProduct(alias = "Master",
-                   description = "'Master' instrument source product.")
+                   description = "The 'Master' instrument L1b source product.")
     Product firstSourceProduct;
     @SourceProduct(alias = "Slave",
-                   description = "'Slave' instrument source product.")
+                   description = "The 'Slave' instrument L1b source product.")
     Product secondSourceProduct;
 
     @TargetProduct(description = "The target product (colocated on 'master' grid).")

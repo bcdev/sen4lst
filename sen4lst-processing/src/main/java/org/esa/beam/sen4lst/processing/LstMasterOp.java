@@ -32,9 +32,10 @@ import java.io.IOException;
                   description = "Sen4LST master operator for LST retrievals.")
 public class LstMasterOp extends Operator {
 
-    @SourceProduct(alias = "MERIS_AATSR_Synergy_Product",
+    @SourceProduct(alias = "sdrSynergyProduct",
+                   label = "MERIS AATSR Synergy Product",
                    optional = true,
-                   description = "MERIS/AATSR SDR source product.")
+                   description = "The MERIS/AATSR synergy SDR product.")
     Product sourceProduct;
 
     @Parameter(defaultValue = "false", description = "Set to true if simulation data (OLCI/SLSTR) is used")
