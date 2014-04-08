@@ -277,22 +277,13 @@
     <img src="images/LstProcessingDialog_io.png" alt="LST Processing Dialog"/>
 </p>
 
-<h5>Source Products Group</h5>
+<h5>Source Product:</h5>
 
 <p class="i1">
-    <b>Master:</b>
-    Here the user specifies the master product. The combo box presents
-    a list of all products open in VISAT. The user may select one of these
-    or, by clicking on the button next to the combo box, choose a product
-    from the file system.
-</p>
-
-<p class="i1">
-    <b>Slave:</b>
-    Here the user specifies the slave product. The combo box presents
-    a list of all products open in VISAT. The user may select one of these
-    or, by clicking on the button next to the combo box, choose a product
-    from the file system.
+    <b>MERIS_AATSR_Synergy_Product:</b>
+    Here the user specifies the source product, which, if set, must be
+    a result of the previous MERIS/AATSR synergy preprocessing. If OLCI/SLSTR simulation data
+    shall be processed (to be specified in processing parameters), an entry in this field has no effect.
 </p>
 
 <h5>Target Product Group</h5>
@@ -396,7 +387,6 @@
 
 <!-------- Command line --------------------------------------->
 <h3>Processing from Command Line</h3>
-<!----- todo -->
 Since both the SDR Synergy and LST Processors makes use of the
 BEAM graph processing framework, they can be
 used also with the 'gpt' command line tool outside BEAM-VISAT. The graph processing is invoked

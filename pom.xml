@@ -7,7 +7,7 @@
     <name>Sen4LST</name>
     <groupId>org.esa.beam.sen4lst</groupId>
     <artifactId>sen4lst</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -80,7 +80,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--<ceresVersion>0.13.2</ceresVersion>-->
         <ceresVersion>0.14-SNAPSHOT</ceresVersion>
-        <beamVersion>4.11</beamVersion>
+        <!--<beamVersion>4.11</beamVersion>-->
+        <beamVersion>5.0-SNAPSHOT</beamVersion>
     </properties>
 
     <dependencyManagement>

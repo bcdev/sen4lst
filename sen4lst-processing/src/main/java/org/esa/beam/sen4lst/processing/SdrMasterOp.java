@@ -9,8 +9,8 @@ import org.esa.beam.framework.gpf.annotations.Parameter;
 import org.esa.beam.framework.gpf.annotations.SourceProduct;
 import org.esa.beam.framework.gpf.annotations.TargetProduct;
 import org.esa.beam.sen4lst.synergy.InstrumentCombination;
-import org.esa.beam.sen4lst.synergy.Sen4LstSynergyConstants;
 import org.esa.beam.sen4lst.synergy.MerisAatsrSynergyOp;
+import org.esa.beam.sen4lst.synergy.Sen4LstSynergyConstants;
 import org.esa.beam.util.ProductUtils;
 
 /**
@@ -19,16 +19,16 @@ import org.esa.beam.util.ProductUtils;
  * @author olafd
  */
 @OperatorMetadata(alias = "Sen4LST.Sdr",
-                  version = "1.0-SNAPSHOT",
-                  authors = "Olaf Danne, Ralf Quast",
-                  copyright = "(c) 2013 by Brockmann Consult",
+                  version = "1.1-SNAPSHOT",
+                  authors = "A. Heckel, P.R.N. North, O. Danne, R. Quast",
+                  copyright = "(c) 2013 European Space Agency",
                   description = "Sen4LST master operator for SDR retrievals.")
 public class SdrMasterOp extends Operator {
 
-    @SourceProduct(alias = "master",
+    @SourceProduct(alias = "Master",
                    description = "'Master' instrument source product.")
     Product firstSourceProduct;
-    @SourceProduct(alias = "slave",
+    @SourceProduct(alias = "Slave",
                    description = "'Slave' instrument source product.")
     Product secondSourceProduct;
 

@@ -46,7 +46,6 @@ public class LstModtranOp extends PixelOperator {
         final double bt8N = sourceSamples[SRC_NADIR_BT_8].getDouble();
         final double bt9N = sourceSamples[SRC_NADIR_BT_9].getDouble();
         final double bt8O = sourceSamples[SRC_OBLIQUE_BT_8].getDouble();
-        final double bt9O = sourceSamples[SRC_OBLIQUE_BT_9].getDouble();  // not needed? // todo: clarify
         final double lstInsitu = sourceSamples[SRC_LST_INSITU].getDouble();
         final double emiss8N = sourceSamples[SRC_NADIR_EMISSIVITY_8].getDouble();
         final double emiss9N = sourceSamples[SRC_NADIR_EMISSIVITY_9].getDouble();

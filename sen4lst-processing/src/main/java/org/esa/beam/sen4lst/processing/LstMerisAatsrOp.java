@@ -62,7 +62,6 @@ public class LstMerisAatsrOp extends PixelOperator {
 
     private static final int SRC_MERIS_L2_WATER_VAPOUR = 14;
 
-    private int landOceanFlagBit;
     private int synergyCloudFlagBit;
 
 
@@ -117,10 +116,6 @@ public class LstMerisAatsrOp extends PixelOperator {
             sampleConfigurer.defineSample(SRC_MERIS_L2_WATER_VAPOUR, Sen4LstSynergyConstants.MERIS_L2_WATER_VAPOUR_BAND_NAME, merisAatsrProduct);
         }
 
-        final FlagCoding merisL1FlagCoding = merisAatsrProduct.getFlagCodingGroup().get(Sen4LstSynergyConstants.MERIS_L1_FLAGS_BANDNAME);
-        final int landOcealFlagVal = merisL1FlagCoding.getAttribute("LAND_OCEAN").getData().getElemInt();
-        landOceanFlagBit = (int) (Math.log(landOcealFlagVal) / Math.log(2));
-
         final FlagCoding synergyCloudFlagCoding = merisAatsrProduct.getFlagCodingGroup().get(Sen4LstSynergyConstants.SYNERGY_CLOUD_FLAGS_BANDNAME);
         final int synergyCloudFlagVal = synergyCloudFlagCoding.getAttribute("CLOUD").getData().getElemInt();
         synergyCloudFlagBit = (int) (Math.log(synergyCloudFlagVal) / Math.log(2));
@@ -138,9 +133,6 @@ public class LstMerisAatsrOp extends PixelOperator {
 
     @Override
     protected void computePixel(int x, int y, Sample[] sourceSamples, WritableSample[] targetSamples) {
-        final int merisL1Flags = sourceSamples[SRC_MERIS_L1_FLAGS].getInt();   // 16
-        final boolean isLand = (merisL1Flags & (1 << landOceanFlagBit)) != 0;
-
         final int synergyCloudFlags = sourceSamples[SRC_SYNERGY_CLOUD_FLAGS].getInt();   // 16
         final boolean isCloud = (synergyCloudFlags & (1 << synergyCloudFlagBit)) != 0;
 
@@ -159,16 +151,9 @@ public class LstMerisAatsrOp extends PixelOperator {
                 waterVapourContent = WATER_VAPOUR_CONTENT;
             }
 
-            final double aatsrNadirBt2 = sourceSamples[SRC_AATSR_NADIR_BT_2].getDouble();
-            final double aatsrNadirBt3 = sourceSamples[SRC_AATSR_NADIR_BT_3].getDouble();
-
-            final double aatsrFwardBt2 = sourceSamples[SRC_AATSR_FWARD_BT_2].getDouble();
-            final double aatsrFwardBt3 = sourceSamples[SRC_AATSR_FWARD_BT_3].getDouble();
-
-            final double bt2N = aatsrNadirBt2;
-            final double bt3N = aatsrNadirBt3;
-            final double bt2O = aatsrFwardBt2;
-            final double bt3O = aatsrFwardBt3;   // not needed? ok!
+            final double bt2N = sourceSamples[SRC_AATSR_NADIR_BT_2].getDouble();
+            final double bt3N = sourceSamples[SRC_AATSR_NADIR_BT_3].getDouble();
+            final double bt2O = sourceSamples[SRC_AATSR_FWARD_BT_2].getDouble();
 
             // use MERIS NDVI:
             final double ndviMeris = (merisb10 - merisb7) / (merisb10 + merisb7);
@@ -176,7 +161,7 @@ public class LstMerisAatsrOp extends PixelOperator {
             final double merisNdviMax = merisNdviMinMax[1];
             final double fvc = (ndviMeris - merisNdviMin) / (merisNdviMax - merisNdviMin);
 
-            // use AATSR NDVI:
+            // alternative: use AATSR NDVI:
 //            final double aatsrNadirSdrB1 = sourceSamples[SRC_AATSR_NADIR_SDR_1].getDouble();
 //            final double aatsrNadirSdrB2 = sourceSamples[SRC_AATSR_NADIR_SDR_2].getDouble();
 //            final double ndviAatsrNadir = (aatsrNadirSdrB2 - aatsrNadirSdrB1) / (aatsrNadirSdrB2 + aatsrNadirSdrB1);

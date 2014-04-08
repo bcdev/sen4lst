@@ -6,10 +6,7 @@ import org.esa.beam.framework.gpf.ui.DefaultSingleTargetProductDialog;
 import org.esa.beam.framework.ui.AppContext;
 
 /**
- * todo: activate this dialog
- * To change this template use File | Settings | File Templates.
- * Date: 21.10.13
- * Time: 13:13
+ * Specific dialog for LST processing
  *
  * @author olafd
  */
@@ -21,6 +18,7 @@ public class LstProcessingDialog extends DefaultSingleTargetProductDialog {
     }
 
     private void setDirectoryProperties() {
+        // implements a workaround to provide a proper dialog to select a directory
         Property[] properties = getBindingContext().getPropertySet().getProperties();
         for (Property property : properties) {
             PropertyDescriptor descriptor = property.getDescriptor();

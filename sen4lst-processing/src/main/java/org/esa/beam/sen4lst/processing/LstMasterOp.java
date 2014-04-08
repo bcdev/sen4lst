@@ -9,7 +9,6 @@ import org.esa.beam.framework.gpf.OperatorSpi;
 import org.esa.beam.framework.gpf.annotations.OperatorMetadata;
 import org.esa.beam.framework.gpf.annotations.Parameter;
 import org.esa.beam.framework.gpf.annotations.SourceProduct;
-import org.esa.beam.sen4lst.synergy.Sen4LstSynergyConstants;
 import org.esa.beam.util.ProductUtils;
 
 import javax.media.jai.*;
@@ -26,17 +25,16 @@ import java.io.IOException;
  *
  * @author olafd
  */
-@OperatorMetadata(alias = "Sen4LST.Lst", version = "1.0-SNAPSHOT",
-                  authors = "O. Danne, R. Quast (Brockmann Consult, Software) \n" +
-                            "J.C. Jiminez-Munoz, J. Sobrino (Univ. Valencia, Algorithms) \n" +
-                            "P.R.N. North (Univ. Swansea, Algorithms)",
-                  copyright = "(c) 2013 Brockmann Consult, Univ. Valencia, Univ. Swansea",
+@OperatorMetadata(alias = "Sen4LST.Lst",
+                  version = "1.1-SNAPSHOT",
+                  authors = "J.C. Jiminez-Munoz, J. Sobrino, P.R.N. North, O. Danne, R. Quast",
+                  copyright = "(c) 2013 European Space Agency",
                   description = "Sen4LST master operator for LST retrievals.")
 public class LstMasterOp extends Operator {
 
-    @SourceProduct(alias = "synergyProcessingResult",
+    @SourceProduct(alias = "MERIS_AATSR_Synergy_Product",
                    optional = true,
-                   description = "MERIS/AATSR (real) or OLCI/SLSTR (simulated) SDR source product.")
+                   description = "MERIS/AATSR SDR source product.")
     Product sourceProduct;
 
     @Parameter(defaultValue = "false", description = "Set to true if simulation data (OLCI/SLSTR) is used")
@@ -82,13 +80,13 @@ public class LstMasterOp extends Operator {
 
     private void retrieveLstMerisAatsr() {
         // get minimum NDVIs:
-        final Band merisB7Band = sourceProduct.getBand(Sen4LstSynergyConstants.MERIS_SDR_620_BANDNAME);
-        final Band merisB10Band = sourceProduct.getBand(Sen4LstSynergyConstants.MERIS_SDR_753_BANDNAME);
+//        final Band merisB7Band = sourceProduct.getBand(Sen4LstSynergyConstants.MERIS_SDR_620_BANDNAME);
+//        final Band merisB10Band = sourceProduct.getBand(Sen4LstSynergyConstants.MERIS_SDR_753_BANDNAME);
 //        final double[] merisNdviMinMax = getNdviMinMax(merisB7Band, merisB10Band);
         final double[] merisNdviMinMax = new double[]{0.2, 0.85};  // changed after FM, 20131017
 
-        final Band aatsrNadirSdrB1Band = sourceProduct.getBand(Sen4LstSynergyConstants.AATSR_NADIR_SDR_555_BANDNAME);
-        final Band aatsrNadirSdrB2Band = sourceProduct.getBand(Sen4LstSynergyConstants.AATSR_NADIR_SDR_659_BANDNAME);
+//        final Band aatsrNadirSdrB1Band = sourceProduct.getBand(Sen4LstSynergyConstants.AATSR_NADIR_SDR_555_BANDNAME);
+//        final Band aatsrNadirSdrB2Band = sourceProduct.getBand(Sen4LstSynergyConstants.AATSR_NADIR_SDR_659_BANDNAME);
 //        final double[] aatsrNadirNdviMinMax = getNdviMinMax(aatsrNadirSdrB1Band, aatsrNadirSdrB2Band);
         final double[] aatsrNadirNdviMinMax = new double[]{0.2, 0.85};  // changed after FM, 20131017
 

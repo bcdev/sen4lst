@@ -9,10 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * todo: add comment
- * To change this template use File | Settings | File Templates.
- * Date: 31.10.12
- * Time: 12:11
+ * Class for atmospheric auxdata representation
  *
  * @author olafd
  */
@@ -29,10 +26,6 @@ public class StandardAtmosphere {
 
     public static StandardAtmosphere getInstance() {
         return Holder.instance;
-    }
-
-    public int getAtmosphereRecordCount() {
-        return atmosphereRecords.size();
     }
 
     public int getAtmosphereId(int index) {

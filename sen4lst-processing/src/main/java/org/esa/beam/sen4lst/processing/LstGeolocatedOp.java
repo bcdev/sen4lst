@@ -3,15 +3,12 @@ package org.esa.beam.sen4lst.processing;
 import org.esa.beam.framework.datamodel.Band;
 import org.esa.beam.framework.datamodel.Product;
 import org.esa.beam.framework.datamodel.ProductData;
-import org.esa.beam.framework.gpf.Operator;
 import org.esa.beam.framework.gpf.OperatorException;
 import org.esa.beam.framework.gpf.OperatorSpi;
 import org.esa.beam.framework.gpf.annotations.OperatorMetadata;
 import org.esa.beam.framework.gpf.annotations.Parameter;
 import org.esa.beam.framework.gpf.annotations.SourceProduct;
 import org.esa.beam.framework.gpf.pointop.*;
-
-import java.awt.image.PixelGrabber;
 
 /**
  * Operator for computation of LST from geolocated OLCI/SLSTR simulation data
@@ -46,6 +43,7 @@ public class LstGeolocatedOp extends PixelOperator {
 
     @Parameter(description = "SLSTR 500m Nadir minimum NDVI value of whole image")
     private double[] slstrNadir500mNdviMinMax;
+
 
     public static final int TARGET_WIDTH = 2;
     public static final int TARGET_HEIGHT = 10;
@@ -103,31 +101,26 @@ public class LstGeolocatedOp extends PixelOperator {
 
     @Override
     protected void computePixel(int x, int y, Sample[] sourceSamples, WritableSample[] targetSamples) {
-        final double olciB8 = sourceSamples[SRC_OLCI_8].getDouble();
-        final double olciB17 = sourceSamples[SRC_OLCI_17].getDouble();
 
         final double slstrNadir500mB2 = sourceSamples[SRC_SLSTR_NADIR_500m_2].getDouble();
         final double slstrNadir500mB3 = sourceSamples[SRC_SLSTR_NADIR_500m_3].getDouble();
 
-        final double slstrNadir1kmB1 = sourceSamples[SRC_SLSTR_NADIR_1km_1].getDouble();
-        final double slstrNadir1kmB2 = sourceSamples[SRC_SLSTR_NADIR_1km_2].getDouble();
+        final double bt8N = sourceSamples[SRC_SLSTR_NADIR_1km_1].getDouble();
+        final double bt9N = sourceSamples[SRC_SLSTR_NADIR_1km_2].getDouble();
 
-        final double slstrOblique1kmB1 = sourceSamples[SRC_SLSTR_OBLIQUE_1km_1].getDouble();
-        final double slstrOblique1kmB2 = sourceSamples[SRC_SLSTR_OBLIQUE_1km_2].getDouble();
+        final double bt8O = sourceSamples[SRC_SLSTR_OBLIQUE_1km_1].getDouble();
 
-        final double ndviOlci = (olciB17 - olciB8) / (olciB17 + olciB8);
-        final double bt8N = slstrNadir1kmB1;
-        final double bt9N = slstrNadir1kmB2;
-        final double bt8O = slstrOblique1kmB1;
-        final double bt9O = slstrOblique1kmB2;   // not needed? // todo: clarify
-        final double olciNdviMin = olciNdviMinMax[0];
-        final double olciNdviMax = olciNdviMinMax[1];
-
-        final double fvcOlci = (ndviOlci - olciNdviMin) / (olciNdviMax - olciNdviMin);
-        final double eOlciB11 = 0.970 * (1 - fvcOlci) + (0.982 + 0.005) * fvcOlci;
-        final double eOlciB12 = 0.977 * (1 - fvcOlci) + (0.984 + 0.005) * fvcOlci;
-//        final double emOlci = 0.5 * (eOlciB11 + eOlciB12);   // currently not needed
-//        final double deOlci = eOlciB11 - eOlciB12;   // currently not needed
+        // possible alternative, currently not used
+//        final double olciB8 = sourceSamples[SRC_OLCI_8].getDouble();
+//        final double olciB17 = sourceSamples[SRC_OLCI_17].getDouble();
+//        final double ndviOlci = (olciB17 - olciB8) / (olciB17 + olciB8);
+//        final double olciNdviMin = olciNdviMinMax[0];
+//        final double olciNdviMax = olciNdviMinMax[1];
+//        final double fvcOlci = (ndviOlci - olciNdviMin) / (olciNdviMax - olciNdviMin);
+//        final double eOlciB11 = 0.970 * (1 - fvcOlci) + (0.982 + 0.005) * fvcOlci;
+//        final double eOlciB12 = 0.977 * (1 - fvcOlci) + (0.984 + 0.005) * fvcOlci;
+//        final double emOlci = 0.5 * (eOlciB11 + eOlciB12);
+//        final double deOlci = eOlciB11 - eOlciB12;
 
         final double ndviSlstrNadir500m = (slstrNadir500mB3 - slstrNadir500mB2) / (slstrNadir500mB3 + slstrNadir500mB2);
         final double slstrNadir500mNdviMin = slstrNadir500mNdviMinMax[0];
