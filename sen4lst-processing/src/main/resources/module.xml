@@ -1,7 +1,7 @@
 <module>
     <manifestVersion>1.0.0</manifestVersion>
     <symbolicName>sen4lst-processing</symbolicName>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>BEAM Sen4LST Processing</name>
 
     <description>
@@ -48,7 +48,8 @@
                 Sen4LST Land Surface Temperature Retrieval.
             </shortDescr>
             <mnemonic/>
-            <parent>tools</parent>
+            <!--<parent>tools</parent>-->
+            <parent>processing.thematicLand</parent>
             <helpID></helpID>
             <placeAfter/>
         </action>
