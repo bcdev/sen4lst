@@ -26,7 +26,7 @@ import java.io.IOException;
  * @author olafd
  */
 @OperatorMetadata(alias = "Sen4LST.Lst",
-                  version = "1.1-SNAPSHOT",
+                  version = "1.1",
                   authors = "J.C. Jiminez-Munoz, J. Sobrino, P.R.N. North, O. Danne, R. Quast",
                   copyright = "(c) 2013 European Space Agency",
                   description = "Sen4LST master operator for LST retrievals.")

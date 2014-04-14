@@ -19,7 +19,7 @@ import org.esa.beam.util.ProductUtils;
  * @author olafd
  */
 @OperatorMetadata(alias = "Sen4LST.Sdr",
-                  version = "1.1-SNAPSHOT",
+                  version = "1.1",
                   authors = "A. Heckel, P.R.N. North, O. Danne, R. Quast",
                   copyright = "(c) 2013 European Space Agency",
                   description = "Sen4LST master operator for SDR retrievals.")

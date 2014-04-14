@@ -6,7 +6,7 @@
         <processorDescriptor>
             <executableName>Meris.CorrectRadiometry</executableName>
             <processorName>MERIS Radiometric Corrections</processorName>
-            <processorVersion>1.1-SNAPSHOT</processorVersion>
+            <processorVersion>1.1</processorVersion>
             <defaultParameters><![CDATA[<parameters>
     <!-- Whether to perform the calibration. -->
     <doCalibration>true</doCalibration>
