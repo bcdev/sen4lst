@@ -7,7 +7,7 @@
     <name>Sen4LST</name>
     <groupId>org.esa.beam.sen4lst</groupId>
     <artifactId>sen4lst</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 
     <packaging>pom</packaging>
 
@@ -78,8 +78,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <ceresVersion>0.14</ceresVersion>
-        <beamVersion>5.0</beamVersion>
+        <ceresVersion>[0.14,0.15-SNAPSHOT)</ceresVersion>
+        <beamVersion>[5.0,5.1-SNAPSHOT)</beamVersion>
     </properties>
 
     <dependencyManagement>
@@ -138,7 +138,7 @@
             <dependency>
                 <groupId>org.esa.beam</groupId>
                 <artifactId>beam-core</artifactId>
-                <version>${beamVersion}</version>
+                <version>5.0.5-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.esa.beam</groupId>
@@ -164,6 +164,12 @@
             <dependency>
                 <groupId>org.esa.beam</groupId>
                 <artifactId>beam-envi-reader</artifactId>
+                <version>${beamVersion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.esa.beam</groupId>
+                <artifactId>beam-envisat-reader</artifactId>
                 <version>${beamVersion}</version>
             </dependency>
 

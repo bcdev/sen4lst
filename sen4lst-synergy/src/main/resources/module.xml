@@ -1,7 +1,7 @@
 <module>
     <manifestVersion>1.0.0</manifestVersion>
     <symbolicName>sen4lst-synergy</symbolicName>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>BEAM Sen4LST Synergy</name>
 
     <description>
@@ -17,8 +17,12 @@
     <licenseUrl>http://www.gnu.org/licenses/gpl.html</licenseUrl>
 
     <changelog>
-        <![CDATA[
-        ]]>
+        <b>Version 1.2:</b><br/>
+        Adapted to latest BEAM dependencies.<br/>
+        <b>Version 1.0:</b><br/>
+        Minor fixes.<br/>
+        <b>Version 1.0:</b><br/>
+        Preliminary final version.<br/>
     </changelog>
 
     <!-- BEAM Basics -->

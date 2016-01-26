@@ -7,7 +7,7 @@ package org.esa.beam.sen4lst.processing;
  */
 public class LstConstants {
 
-    public static final String LST_PROCESSING_VERSION = "v1.1";
+    public static final String LST_PROCESSING_VERSION = "v1.2";
 
     public static final String[] NADIR_RADIANCE_BAND_NAMES =
             new String[]{"L1n", "L2n", "L3n", "L4n", "L5n", "L6n", "L7n", "L8n", "L9n"};
